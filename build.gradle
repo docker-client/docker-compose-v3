@@ -80,7 +80,7 @@ artifacts {
 publishing {
   publications {
     dockerCompose(MavenPublication) {
-      artifactId 'docker-compose-v3'
+      artifactId 'docker-compose'
       version artifactVersion
       from components.java
       artifact sourcesJar
