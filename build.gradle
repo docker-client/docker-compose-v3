@@ -1,79 +1,118 @@
+import java.text.SimpleDateFormat
+
 buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-    }
-}
-
-apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
-
-repositories {
+  repositories {
     mavenLocal()
     jcenter()
     mavenCentral()
+  }
+
+  dependencies {
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+  }
+}
+
+plugins {
+  id 'com.gradle.build-scan' version '1.0'
+}
+
+apply plugin: 'groovy'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+group = 'de.gesellix'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+ext {
+  artifactVersion = new SimpleDateFormat('yyyy-MM-dd\'T\'HH-mm-ss').format(new Date())
+  bintrayDryRun = false
+}
+
+repositories {
+  mavenLocal()
+  jcenter()
+  mavenCentral()
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy:2.4.9'
-    compile 'org.codehaus.groovy:groovy-json:2.4.9'
+  compile 'org.codehaus.groovy:groovy:2.4.9'
+  compile 'org.codehaus.groovy:groovy-json:2.4.9'
 
-    compile 'org.slf4j:slf4j-api:1.7.22'
-    testCompile 'ch.qos.logback:logback-classic:1.2.1'
+  compile 'org.slf4j:slf4j-api:1.7.24'
+  testCompile 'ch.qos.logback:logback-classic:1.2.1'
 
-    compile 'org.yaml:snakeyaml:1.18'
-    compile 'com.squareup.moshi:moshi:1.4.0'
-    compile 'com.google.code.gson:gson:2.8.0'
-    //    compile 'com.github.fge:json-schema-validator:2.2.6'
+  compile 'org.yaml:snakeyaml:1.18'
+  compile 'com.squareup.moshi:moshi:1.4.0'
+  compile 'com.google.code.gson:gson:2.8.0'
+  //    compile 'com.github.fge:json-schema-validator:2.2.6'
 
-    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
-        exclude module: 'groovy-all'
-    }
-    testCompile 'cglib:cglib-nodep:3.2.4'
+  testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+    exclude module: 'groovy-all'
+  }
+  testCompile 'cglib:cglib-nodep:3.2.5'
+}
+
+def dependencyVersions = [
+    'org.slf4j:slf4j-api:1.7.24'
+]
+
+configurations.all {
+  resolutionStrategy {
+    failOnVersionConflict()
+    force dependencyVersions
+  }
 }
 
 task sourcesJar(type: Jar) {
-    dependsOn classes
-    classifier 'sources'
-    from sourceSets.main.allSource
+  dependsOn classes
+  classifier 'sources'
+  from sourceSets.main.allSource
 }
 
 artifacts {
-    archives sourcesJar
+  archives sourcesJar
 }
 
 publishing {
-    publications {
-        dockerCompose(MavenPublication) {
-            artifactId 'docker-compose'
-            version artifactVersion
-            from components.java
-            artifact sourcesJar
-        }
+  publications {
+    dockerCompose(MavenPublication) {
+      artifactId 'docker-compose-v3'
+      version artifactVersion
+      from components.java
+      artifact sourcesJar
     }
+  }
 }
 
 bintray {
-    user = System.env.BINTRAY_USER ?: project["bintray.user"]
-    key = System.env.BINTRAY_API_KEY ?: project["bintray.key"]
-    publications = ['dockerCompose']
-    pkg {
-        repo = 'docker-utils'
-        name = 'docker-compose'
-        desc = 'A Docker compose abstraction for the JVM written in Groovy'
-        licenses = ['Apache-2.0']
-        labels = ['docker', 'compose', 'java', 'groovy']
-        version = [
-                name: artifactVersion
-        ]
-        vcsUrl = 'https://github.com/gesellix/docker-client.git'
-    }
-    dryRun = bintrayDryRun
+  user = System.env.BINTRAY_USER ?: project["bintray.user"]
+  key = System.env.BINTRAY_API_KEY ?: project["bintray.key"]
+  publications = ['dockerCompose']
+  pkg {
+    repo = 'docker-utils'
+    name = 'docker-compose'
+    desc = 'A Docker compose v3 abstraction for the JVM written in Groovy'
+    licenses = ['Apache-2.0']
+    labels = ['docker', 'compose', 'stack', 'deploy', 'java', 'groovy']
+    version = [
+        name: artifactVersion
+    ]
+    vcsUrl = 'https://github.com/docker-client/docker-compose-v3.git'
+  }
+  dryRun = bintrayDryRun
 }
 bintrayUpload.dependsOn build
+
+buildScan {
+  licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+  licenseAgree = 'yes'
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '3.4.1'
+  distributionType = Wrapper.DistributionType.ALL
+}

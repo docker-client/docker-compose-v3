@@ -1,0 +1,25 @@
+sudo: required
+language: java
+services:
+  - docker
+jdk:
+#  - openjdk7
+  - oraclejdk7
+#  - oraclejdk8
+env:
+  global:
+    - TERM=dumb
+    - secure: ZiYB6QeI/Sbf/WyQMQFDjbUH5RdEWrNMUT61r0h5ljynaEjmDGz2UmpJqVOpTwKiCGfkmSUHW2izTscUh3SkGc8rYvJ5rO/0K5vGuijCLyzTNo9hKjWiysX4fOaiOaQMP4RctCqnNE6C6RnDlEPfgxV9qyHtir19ZIw2dYicKuwh/RsdF9R8ly70hgl9jiay1XmlvjBavvkcY/bTFWjtQMOIxUu9p9e4ohUZR1pg7xB/cDL08dwj40MPpJE0GfIPaJQR/QATSDDEdlIxynpH4a9RyyHNed3m050iiDNdJYZN1zs5QG6I49jsHnQNbQhwHfFA1oMOSaezsTUlaqxxiuk8zhofYhwdU8CAFtDvExNMnQmpkLWdLSvn2PCYcc6ORQlpUv0uNd4X2m+YAwDxt3CkoJdgsTYBHSGDhqt8FYzd1//T0Q63hG2NyFvT2azbh3Un3GmZ4Zcm5W95tq8TpZQ1AmjiDkfUK9r64pkpLoj2Fk6qgL46MGdtZqYNCcBw9VLOBXhWkFywu0/Bm3zZkhDm6HhcD0RIzweQuQy/FzqgBQDo/bE1RdVwKTNhyG/dmjIdVGa6p5JU9NIA3Kq1sI8CQEAL/tv5zkBGOlmQE3u0t4VYeyvrTidO1NCx+FNcBSZYzkAibSZwVpT3UBjBOgf/LzNNA2gTBzepeJgRVZg=
+    - secure: AToDfxOz7gz//eWVTaL4cId8Brcd5c3iO3qyezOrzBPTM19Y1KeqdCkiPY1TJsrkuGh06dDMbERlNDXXsLBiwGjm5iJnejuPgJDH6V3dh0I03W4j0svwZWWTM5ERaGh/ggPWJoqeNkxVJ1lc/5TFGFxXepZuNdE8DU/xcnmbd2qrUiXhdRlSUnk0i9R+w6Ofqxxn74GnbxVJ9EI9ZM0iz01oaLAlllPGOze3ZQjJJXfS40ZVHA1owgkTPJKeZaJK9o3/t2IV5xjkcfXFsXnJglFnUIGVb4mrunf/qbUN1DogXh9NbdU2tzvGISWCbGgWVOY8FqShyZ51vyURh7lYaOUKQktrgmAjON1/jW9qyh2U7Gf7ShHhYnemGNeZMbahG4Pkn+/wZ9uzbd+Wf4Yy5oDgBkSYABWMGdS4DypQHt9FF+KDUKwEWTf3qkoeCNvjoakW1SltOlIYff89Zo9FHl6nGFWkpklLjb/iTnvmBYN1DBvUz+J/7dOKMZI0yageHEBz/YwsfI8z1djhXGV30zrINfMUS3Gwd68/k7bu6Kbi47bboSeDTIqyAp/1mP7z/6CVgqSDswNfI0RYaLbuj8qxwgHyQcdIc19toouYlU9EjaNQ23PuU7qSKLjhiGjFgKSEwkiECy9U9ATTwBPPaS5OXceebEOOY5+GVgRVoRg=
+before_install:
+  - sudo dpkg --purge --force-depends ca-certificates-java
+  - sudo apt-get install ca-certificates-java
+script:
+  - "./gradlew clean build --stacktrace --info -Dscan"
+deploy:
+  provider: script
+  script: ./gradlew bintrayUpload -x check --info --stacktrace
+  skip_cleanup: true
+  on:
+    branch: master
+#    tags: true
