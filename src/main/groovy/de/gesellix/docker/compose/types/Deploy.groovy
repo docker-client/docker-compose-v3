@@ -19,5 +19,6 @@ class Deploy {
     @Json(name = 'restart_policy')
     RestartPolicy restartPolicy
     Placement placement
-
+    @Json(name = 'endpoint_mode')
+    String endpointMode
 }
