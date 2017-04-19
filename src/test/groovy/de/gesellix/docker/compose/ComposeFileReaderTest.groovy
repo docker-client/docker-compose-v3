@@ -31,6 +31,8 @@ import groovy.json.JsonSlurper
 import spock.lang.Ignore
 import spock.lang.Specification
 
+import java.nio.file.Paths
+
 class ComposeFileReaderTest extends Specification {
 
     ComposeFileReader reader
@@ -54,10 +56,10 @@ class ComposeFileReaderTest extends Specification {
     def "can load yaml into pojo"() {
         given:
         def sampleConfig = newSampleConfig()
-        InputStream composeFile = getClass().getResourceAsStream('parse/sample.yaml')
+        URL composeFile = getClass().getResource('parse/sample.yaml')
 
         when:
-        def result = reader.load(composeFile)
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
 
         then:
         result.services == sampleConfig.services
@@ -75,10 +77,10 @@ class ComposeFileReaderTest extends Specification {
                 "BAZ" : "2.5",
                 "QUUX": ""])
 
-        InputStream composeFile = getClass().getResourceAsStream('environment/sample.yaml')
+        URL composeFile = getClass().getResource('environment/sample.yaml')
 
         when:
-        def result = reader.load(composeFile)
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
 
         then:
         result.services['dict-env'].environment == expectedEnv
@@ -88,10 +90,10 @@ class ComposeFileReaderTest extends Specification {
     def "can load version 3.1"() {
         given:
         def sampleConfig = newSampleConfigVersion_3_1()
-        InputStream composeFile = getClass().getResourceAsStream('version_3_1/sample.yaml')
+        URL composeFile = getClass().getResource('version_3_1/sample.yaml')
 
         when:
-        def result = reader.load(composeFile)
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
 
         then:
         result.services == sampleConfig.services
@@ -102,10 +104,10 @@ class ComposeFileReaderTest extends Specification {
     def "can load attachable network"() {
         given:
         def sampleConfig = newSampleConfigAttachableNetwork()
-        InputStream composeFile = getClass().getResourceAsStream('attachable/sample.yaml')
+        URL composeFile = getClass().getResource('attachable/sample.yaml')
 
         when:
-        def result = reader.load(composeFile)
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
 
         then:
         result.networks.mynet1 == sampleConfig.mynet1
@@ -115,10 +117,10 @@ class ComposeFileReaderTest extends Specification {
     def "can load expanded port formats"() {
         given:
         def sampleConfig = newSampleConfigPortFormats()
-        InputStream composeFile = getClass().getResourceAsStream('portformats/sample.yaml')
+        URL composeFile = getClass().getResource('portformats/sample.yaml')
 
         when:
-        def result = reader.load(composeFile)
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
 
         then:
         result.services.web.ports == sampleConfig
@@ -127,10 +129,10 @@ class ComposeFileReaderTest extends Specification {
     def "can load a full example"() {
         given:
         def sampleConfig = newSampleConfigFull()
-        InputStream composeFile = getClass().getResourceAsStream('full/sample.yaml')
+        URL composeFile = getClass().getResource('full/sample.yaml')
 
         when:
-        def result = reader.load(composeFile)
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
 
         then:
         result.version == sampleConfig.version
@@ -144,7 +146,7 @@ class ComposeFileReaderTest extends Specification {
     @Ignore
     def "can interpolate environment variables"() {
         given:
-        def home = System.getenv('HOME')
+        def home = "/home/foo"
         def expectedLabels = new Labels(entries: [
                 "home1"      : home,
                 "home2"      : home,
@@ -152,10 +154,15 @@ class ComposeFileReaderTest extends Specification {
                 "default"    : "default"
         ])
 
-        InputStream composeFile = getClass().getResourceAsStream('interpolation/sample.yaml')
+        URL composeFile = getClass().getResource('interpolation/sample.yaml')
 
         when:
-        def result = reader.load(composeFile)
+        def result = reader.load(composeFile.openStream(),
+                                 Paths.get(composeFile.toURI()).parent.toString(),
+                                 [
+                                         "HOME": home,
+                                         "FOO" : "foo"
+                                 ])
 
         then:
         result.services.test.labels == expectedLabels
@@ -325,7 +332,7 @@ class ComposeFileReaderTest extends Specification {
                                 reservations: new Reservations(
                                         nanoCpus: 0.0001,
                                         memory: "20M"
-                                ),
+                                )
                         ),
                         restartPolicy: new RestartPolicy(
                                 condition: "on_failure",
@@ -624,7 +631,7 @@ class ComposeFileReaderTest extends Specification {
                 "external-network"      : new Network(
                         external: new External(
 //                                name: 'external-network',
-                                external: true)
+external: true)
                 ),
                 "other-external-network": new Network(
                         external: new External(
@@ -644,7 +651,7 @@ class ComposeFileReaderTest extends Specification {
                 "external-volume"      : new Volume(
                         external: new External(
 //                                name: 'external-volume',
-                                external: true)
+external: true)
                 ),
                 "other-external-volume": new Volume(
                         external: new External(

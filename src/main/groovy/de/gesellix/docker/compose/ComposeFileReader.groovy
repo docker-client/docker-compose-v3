@@ -1,6 +1,5 @@
 package de.gesellix.docker.compose
 
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import de.gesellix.docker.compose.adapters.ListToPortConfigsAdapter
 import de.gesellix.docker.compose.adapters.ListToServiceSecretsAdapter
@@ -66,18 +65,28 @@ class ComposeFileReader {
 
     ComposeInterpolator interpolator = new ComposeInterpolator()
 
-    Map<String, Object> loadYaml(InputStream composeFile) {
-        Map<String, Object> composeContent = new Yaml().load(composeFile)
+    Map<String, Map<String, Object>> loadYaml(InputStream composeFile) {
+        Map<String, Map<String, Object>> composeContent = new Yaml().load(composeFile) as Map
         log.info("composeContent: $composeContent}")
 
         return composeContent
     }
 
-    ComposeConfig load(InputStream composeFile) {
-        Map<String, Object> composeContent = loadYaml(composeFile)
-        interpolator.interpolate(composeContent)
+    ComposeConfig load(InputStream composeFile, String workingDir, Map<String, String> environment = System.getenv()) {
+        Map<String, Map<String, Object>> composeContent = loadYaml(composeFile)
 
-        Moshi moshi = new Moshi.Builder()
+        def forbiddenProperties = collectForbiddenServiceProperties(composeContent.services, ForbiddenProperties)
+        if (forbiddenProperties) {
+            log.error("Configuration contains forbidden properties: ${forbiddenProperties}")
+            throw new IllegalStateException("Configuration contains forbidden properties")
+        }
+
+        // overrides interpolated sections
+        composeContent.putAll(interpolator.interpolate(composeContent, environment))
+
+        def json = JsonOutput.toJson(composeContent)
+
+        ComposeConfig cfg = new Moshi.Builder()
                 .add(new ListToPortConfigsAdapter())
                 .add(new ListToServiceSecretsAdapter())
                 .add(new MapOrListToEnvironmentAdapter())
@@ -88,77 +97,10 @@ class ComposeFileReader {
                 .add(new StringOrListToCommandAdapter())
                 .add(new StringToServiceNetworksAdapter())
                 .build()
-        JsonAdapter<ComposeConfig> jsonAdapter = moshi.adapter(ComposeConfig)
-
-        def json = JsonOutput.toJson(composeContent)
-        ComposeConfig cfg = jsonAdapter.fromJson(json)
-
-        def forbiddenProperties = collectForbiddenServiceProperties(composeContent.services, ForbiddenProperties)
-        if (forbiddenProperties) {
-            log.error("Configuration contains forbidden properties: ${forbiddenProperties}")
-            throw new IllegalStateException("Configuration contains forbidden properties")
-        }
+                .adapter(ComposeConfig)
+                .fromJson(json)
 
 //        def valid = new SchemaValidator().validate(composeContent)
-
-//        composeContent.services.each{ serviceName, serviceDef ->
-//        }
-
-//        if services, ok := configDict["services"]; ok {
-//            servicesConfig, err := interpolation.Interpolate(services.(types.Dict), "service", os.LookupEnv)
-//            if err != nil {
-//                return nil, err
-//            }
-//
-//            servicesList, err := loadServices(servicesConfig, configDetails.WorkingDir)
-//            if err != nil {
-//                return nil, err
-//            }
-//
-//            cfg.services = servicesList
-//        }
-
-//        if networks, ok := configDict["networks"]; ok {
-//            networksConfig, err := interpolation.Interpolate(networks.(types.Dict), "network", os.LookupEnv)
-//            if err != nil {
-//                return nil, err
-//            }
-//
-//            networksMapping, err := loadNetworks(networksConfig)
-//            if err != nil {
-//                return nil, err
-//            }
-//
-//            cfg.NetworksType = networksMapping
-//        }
-
-//        if volumes, ok := configDict["volumes"]; ok {
-//            volumesConfig, err := interpolation.Interpolate(volumes.(types.Dict), "volume", os.LookupEnv)
-//            if err != nil {
-//                return nil, err
-//            }
-//
-//            volumesMapping, err := loadVolumes(volumesConfig)
-//            if err != nil {
-//                return nil, err
-//            }
-//
-//            cfg.Volumes = volumesMapping
-//        }
-
-//        if secrets, ok := configDict["secrets"]; ok {
-//            secretsConfig, err := interpolation.Interpolate(secrets.(types.Dict), "secret", os.LookupEnv)
-//            if err != nil {
-//                return nil, err
-//            }
-//
-//            secretsMapping, err := loadSecrets(secretsConfig, configDetails.WorkingDir)
-//            if err != nil {
-//                return nil, err
-//            }
-//
-//            cfg.Secrets = secretsMapping
-//        }
 
         def unsupportedProperties = collectUnsupportedServiceProperties(composeContent.services, UnsupportedProperties)
         if (unsupportedProperties) {
