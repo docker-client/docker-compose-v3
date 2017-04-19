@@ -28,7 +28,6 @@ import de.gesellix.docker.compose.types.Ulimits
 import de.gesellix.docker.compose.types.UpdateConfig
 import de.gesellix.docker.compose.types.Volume
 import groovy.json.JsonSlurper
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.nio.file.Paths
@@ -143,7 +142,6 @@ class ComposeFileReaderTest extends Specification {
         result == sampleConfig
     }
 
-    @Ignore
     def "can interpolate environment variables"() {
         given:
         def home = "/home/foo"
