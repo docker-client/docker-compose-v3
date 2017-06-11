@@ -1,6 +1,10 @@
 import java.text.SimpleDateFormat
 
 buildscript {
+    ext {
+        kotlin_version = '1.1.2'
+    }
+
     repositories {
         mavenLocal()
         jcenter()
@@ -10,6 +14,8 @@ buildscript {
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
     }
 }
 
@@ -17,7 +23,10 @@ plugins {
     id 'com.gradle.build-scan' version '1.0'
 }
 
+apply plugin: 'org.junit.platform.gradle.plugin'
+
 apply plugin: 'groovy'
+apply plugin: 'kotlin'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
@@ -35,13 +44,17 @@ ext {
 repositories {
     mavenLocal()
     jcenter()
+    maven { url "http://dl.bintray.com/jetbrains/spek" }
     mavenCentral()
 }
 
 dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+
     compile 'org.codehaus.groovy:groovy:2.4.10'
     compile 'org.codehaus.groovy:groovy-json:2.4.10'
 
+    compile 'io.github.microutils:kotlin-logging:1.4.4'
     compile 'org.slf4j:slf4j-api:1.7.25'
     testCompile 'ch.qos.logback:logback-classic:1.2.3'
 
@@ -55,9 +68,21 @@ dependencies {
         exclude module: 'groovy-all'
     }
     testCompile 'cglib:cglib-nodep:3.2.5'
+
+    testCompile "org.jetbrains.kotlin:kotlin-test"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testCompile("org.jetbrains.spek:spek-api:$kotlin_version") {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:$kotlin_version") {
+        exclude group: 'org.junit.platform'
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    testRuntime "org.junit.platform:junit-platform-launcher:1.0.0-M4"
 }
 
 def dependencyVersions = [
+        "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
         'org.slf4j:slf4j-api:1.7.25'
 ]
 
@@ -65,6 +90,25 @@ configurations.all {
     resolutionStrategy {
         failOnVersionConflict()
         force dependencyVersions
+    }
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+junitPlatform {
+    filters {
+        engines {
+            include 'spek'
+        }
     }
 }
 
@@ -96,9 +140,9 @@ bintray {
     pkg {
         repo = 'docker-utils'
         name = 'docker-compose'
-        desc = 'A Docker compose v3 abstraction for the JVM written in Groovy'
+        desc = 'A Docker compose v3 abstraction for the JVM'
         licenses = ['Apache-2.0']
-        labels = ['docker', 'compose', 'stack', 'deploy', 'java', 'groovy']
+        labels = ['docker', 'compose', 'stack', 'deploy', 'java']
         version = [
                 name: artifactVersion
         ]
