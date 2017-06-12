@@ -4,8 +4,8 @@ class ComposeInterpolator {
 
     val template = Template()
 
-    fun interpolate(composeContent: Map<String, Map<String, Map<String, Any?>?>?>, environment: Map<String, String>): Map<String, Map<String, Any?>?> {
-        val result = hashMapOf<String, Map<String, Any?>?>()
+    fun interpolate(composeContent: Map<String, Map<String, Map<String, Any?>?>?>, environment: Map<String, String>): Map<String, Map<String, Map<String, Any?>?>> {
+        val result = hashMapOf<String, Map<String, Map<String, Any?>?>>()
         listOf("services", "networks", "volumes", "secrets").forEach { section ->
             val sectionConfig = composeContent[section]
             if (sectionConfig != null) {
@@ -15,8 +15,8 @@ class ComposeInterpolator {
         return result
     }
 
-    fun interpolateSection(config: Map<String, Map<String, Any?>?>, environment: Map<String, String>): Map<String, Any?> {
-        val result = hashMapOf<String, Any?>()
+    fun interpolateSection(config: Map<String, Map<String, Any?>?>, environment: Map<String, String>): Map<String, Map<String, Any?>?> {
+        val result = hashMapOf<String, Map<String, Any?>?>()
         config.forEach { key, value ->
             if (value == null) {
                 result[key] = null
@@ -46,12 +46,16 @@ class ComposeInterpolator {
     }
 
     fun recursiveInterpolate(value: Any?, environment: Map<String, String>): Any? {
-        if (value is String) {
+        if (value == null) {
+            return null
+        } else if (value is String) {
             return template.substitute(value, environment)
         } else if (value is Map<*, *>) {
-            val interpolatedMap = hashMapOf<Any?, Any?>()
+            val interpolatedMap = hashMapOf<Any, Any?>()
             value.forEach { key, elem ->
-                interpolatedMap[key] = recursiveInterpolate(elem, environment)
+                if (key != null) {
+                    interpolatedMap[key] = recursiveInterpolate(elem, environment)
+                }
             }
             return interpolatedMap
         } else if (value is List<*>) {
