@@ -1,7 +1,15 @@
 package de.gesellix.docker.compose
 
 import com.squareup.moshi.Moshi
-import de.gesellix.docker.compose.adapters.*
+import de.gesellix.docker.compose.adapters.ListToPortConfigsAdapter
+import de.gesellix.docker.compose.adapters.ListToServiceSecretsAdapter
+import de.gesellix.docker.compose.adapters.MapOrListToEnvironmentAdapter
+import de.gesellix.docker.compose.adapters.MapOrListToExtraHosts
+import de.gesellix.docker.compose.adapters.MapOrListToLabelAdapter
+import de.gesellix.docker.compose.adapters.MapToDriverOptsAdapter
+import de.gesellix.docker.compose.adapters.MapToExternalAdapter
+import de.gesellix.docker.compose.adapters.StringOrListToCommandAdapter
+import de.gesellix.docker.compose.adapters.StringToServiceNetworksAdapter
 import de.gesellix.docker.compose.interpolation.ComposeInterpolator
 import de.gesellix.docker.compose.types.ComposeConfig
 import groovy.json.JsonOutput

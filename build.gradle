@@ -50,6 +50,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     compile 'org.codehaus.groovy:groovy:2.4.10'
     compile 'org.codehaus.groovy:groovy-json:2.4.10'
@@ -70,7 +71,6 @@ dependencies {
     testCompile 'cglib:cglib-nodep:3.2.5'
 
     testCompile "org.jetbrains.kotlin:kotlin-test"
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     testCompile("org.jetbrains.spek:spek-api:$kotlin_version") {
         exclude group: 'org.jetbrains.kotlin'
     }
