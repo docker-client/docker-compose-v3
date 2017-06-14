@@ -1,5 +1,6 @@
 package de.gesellix.docker.compose
 
+import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import de.gesellix.docker.compose.adapters.ListToPortConfigsAdapter
 import de.gesellix.docker.compose.adapters.ListToServiceSecretsAdapter
@@ -12,7 +13,6 @@ import de.gesellix.docker.compose.adapters.StringOrListToCommandAdapter
 import de.gesellix.docker.compose.adapters.StringToServiceNetworksAdapter
 import de.gesellix.docker.compose.interpolation.ComposeInterpolator
 import de.gesellix.docker.compose.types.ComposeConfig
-import groovy.json.JsonOutput
 import mu.KotlinLogging
 import org.yaml.snakeyaml.Yaml
 import java.io.InputStream
@@ -75,7 +75,7 @@ class ComposeFileReader {
         return composeContent
     }
 
-    fun load(composeFile: InputStream, workingDir: String, environment: Map<String, String> = System.getenv()): ComposeConfig {
+    fun load(composeFile: InputStream, workingDir: String, environment: Map<String, String> = System.getenv()): ComposeConfig? {
         val composeContent = loadYaml(composeFile)
 
         val forbiddenProperties = collectForbiddenServiceProperties(composeContent["services"], ForbiddenProperties)
@@ -86,9 +86,8 @@ class ComposeFileReader {
 
         val interpolated = interpolator.interpolate(composeContent, environment)
 
-        val json = JsonOutput.toJson(interpolated)
-
         val cfg = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
                 .add(ListToPortConfigsAdapter())
                 .add(ListToServiceSecretsAdapter())
                 .add(MapOrListToEnvironmentAdapter())
@@ -100,7 +99,8 @@ class ComposeFileReader {
                 .add(StringToServiceNetworksAdapter())
                 .build()
                 .adapter(ComposeConfig::class.java)
-                .fromJson(json)
+//                .fromJson(groovy.json.JsonOutput.toJson(interpolated))
+                .fromJsonValue(interpolated)
 
 //        def valid = new SchemaValidator().validate(composeContent)
 

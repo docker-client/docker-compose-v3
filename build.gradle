@@ -60,7 +60,8 @@ dependencies {
     testCompile 'ch.qos.logback:logback-classic:1.2.3'
 
     compile 'org.yaml:snakeyaml:1.18'
-    compile 'com.squareup.moshi:moshi:1.4.0'
+    compile 'com.squareup.moshi:moshi:1.5.0'
+    compile 'com.squareup.moshi:moshi-kotlin:1.5.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.re2j:re2j:1.1'
 //    compile 'com.github.fge:json-schema-validator:2.2.6'
@@ -82,6 +83,7 @@ dependencies {
 }
 
 def dependencyVersions = [
+        "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version",
         "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
         'org.slf4j:slf4j-api:1.7.25'
 ]
