@@ -15,7 +15,7 @@ data class Network(
         @ExternalType
         var external: External = External(),
         var internal: Boolean? = null,
-        var attachable: Boolean? = null,
+        var attachable: Boolean? = false,
         @LabelsType
         var labels: Labels? = null
 )

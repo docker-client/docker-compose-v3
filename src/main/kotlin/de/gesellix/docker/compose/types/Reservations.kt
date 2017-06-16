@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 data class Reservations(
 
         @Json(name = "cpus")
-        val nanoCpus: String,
+        var nanoCpus: String? = null,
         //        val MemoryBytes: Long,
-        val memory: String
+        var memory: String? = null
 )

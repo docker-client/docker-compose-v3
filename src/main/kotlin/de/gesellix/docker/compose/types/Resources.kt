@@ -2,6 +2,6 @@ package de.gesellix.docker.compose.types
 
 data class Resources(
 
-        val limits: Limits,
-        val reservations: Reservations
+        var limits: Limits? = null,
+        var reservations: Reservations? = null
 )

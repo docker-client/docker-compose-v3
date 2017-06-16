@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 data class Limits(
 
         @Json(name = "cpus")
-        val nanoCpus: String,
-//        val MemoryBytes: Long,
-        val memory: String
+        var nanoCpus: String? = null,
+        //        val MemoryBytes: Long,
+        var memory: String? = null
 )

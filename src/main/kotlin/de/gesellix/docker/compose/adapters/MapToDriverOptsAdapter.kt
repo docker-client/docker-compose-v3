@@ -8,14 +8,23 @@ class MapToDriverOptsAdapter {
 
     @ToJson
     fun toJson(@DriverOptsType driverOpts: DriverOpts): Map<String, String> {
-        throw  UnsupportedOperationException()
+        throw UnsupportedOperationException()
     }
 
     @FromJson
     @DriverOptsType
     fun fromJson(options: Map<String, String>): DriverOpts {
         val driverOpts = DriverOpts()
-        driverOpts.options.putAll(options)
+        for ((key, value) in options) {
+//            if (value is Int) {
+//                driverOpts.options.put(key, value.toString())
+//            } else
+            if (value is String) {
+                driverOpts.options.put(key, value)
+            } else {
+                throw IllegalStateException("expected driver_opts.$key to be either Int or String, but was ${value::class.java}")
+            }
+        }
         return driverOpts
     }
 }

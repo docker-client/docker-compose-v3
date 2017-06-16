@@ -4,14 +4,14 @@ import com.squareup.moshi.Json
 
 data class RestartPolicy(
 
-        val condition: String,
+        var condition: String? = null,
 
         //    Duration Delay
-        val delay: String,
+        var delay: String? = null,
 
         @Json(name = "max_attempts")
-        val maxAttempts: Int,
+        var maxAttempts: Int? = null,
 
         //    Duration Window
-        val window: String
+        var window: String? = null
 )

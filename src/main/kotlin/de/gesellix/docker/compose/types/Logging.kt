@@ -2,6 +2,6 @@ package de.gesellix.docker.compose.types
 
 data class Logging(
 
-        val driver: String,
-        val options: Map<String, String>
+        var driver: String? = null,
+        var options: Map<String, String>? = null
 )

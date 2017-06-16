@@ -4,10 +4,10 @@ import de.gesellix.docker.compose.adapters.CommandType
 
 data class Healthcheck(
 
-        val disable: Boolean,
-        val interval: String,
-        val retries: Float,
+        var disable: Boolean? = false,
+        var interval: String? = null,
+        var retries: Float? = null,
         @CommandType
-        val test: Command = Command(),
-        val timeout: String
+        var test: Command = Command(),
+        var timeout: String? = null
 )

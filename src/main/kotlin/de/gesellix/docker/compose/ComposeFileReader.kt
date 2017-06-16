@@ -68,11 +68,13 @@ class ComposeFileReader {
 
     val interpolator = ComposeInterpolator()
 
-    fun loadYaml(composeFile: InputStream): Map<String, Map<String, Map<String, Any?>?>> {
-        val composeContent = Yaml().loadAs(composeFile, Map::class.java) as Map<String, Map<String, Map<String, Any>>>
+    fun loadYaml(composeFile: InputStream): HashMap<String, Map<String, Map<String, Any?>?>> {
+        val composeContent = Yaml().loadAs(composeFile, Map::class.java) as Map<String, Map<String, Map<String, Any?>?>>
         log.info("composeContent: $composeContent}")
 
-        return composeContent
+        return hashMapOf<String, Map<String, Map<String, Any?>?>>().apply {
+            putAll(composeContent)
+        }
     }
 
     fun load(composeFile: InputStream, workingDir: String, environment: Map<String, String> = System.getenv()): ComposeConfig? {
@@ -84,7 +86,8 @@ class ComposeFileReader {
             throw IllegalStateException("Configuration contains forbidden properties")
         }
 
-        val interpolated = interpolator.interpolate(composeContent, environment)
+        // overrides interpolated sections, but keeps non-interpolated ones.
+        composeContent.putAll(interpolator.interpolate(composeContent, environment))
 
         val cfg = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
@@ -99,17 +102,16 @@ class ComposeFileReader {
                 .add(StringToServiceNetworksAdapter())
                 .build()
                 .adapter(ComposeConfig::class.java)
-//                .fromJson(groovy.json.JsonOutput.toJson(interpolated))
-                .fromJsonValue(interpolated)
+                .fromJsonValue(composeContent)
 
 //        def valid = new SchemaValidator().validate(composeContent)
 
-        val unsupportedProperties = collectUnsupportedServiceProperties(interpolated["services"], UnsupportedProperties)
+        val unsupportedProperties = collectUnsupportedServiceProperties(composeContent["services"], UnsupportedProperties)
         if (unsupportedProperties.isNotEmpty()) {
             log.warn("Ignoring unsupported options: ${unsupportedProperties.joinToString(", ")}")
         }
 
-        val deprecatedProperties = collectDeprecatedServiceProperties(interpolated["services"], DeprecatedProperties)
+        val deprecatedProperties = collectDeprecatedServiceProperties(composeContent["services"], DeprecatedProperties)
         if (deprecatedProperties.isNotEmpty()) {
             log.warn("Ignoring deprecated options: $deprecatedProperties")
         }

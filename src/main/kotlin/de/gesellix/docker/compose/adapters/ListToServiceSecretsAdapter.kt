@@ -8,13 +8,13 @@ import de.gesellix.docker.compose.types.ServiceSecret
 class ListToServiceSecretsAdapter {
 
     @ToJson
-    fun toJson(@ServiceSecretsType secrets: List<Map<String, ServiceSecret>>): List<Map<String, Any>> {
+    fun toJson(@ServiceSecretsType secrets: ArrayList<Map<String, ServiceSecret?>>): List<Map<String, Any>> {
         throw UnsupportedOperationException()
     }
 
     @FromJson
     @ServiceSecretsType
-    fun fromJson(reader: JsonReader): List<Map<String, ServiceSecret?>> {
+    fun fromJson(reader: JsonReader): ArrayList<Map<String, ServiceSecret?>> {
         val result = arrayListOf<Map<String, ServiceSecret?>>()
         val token = reader.peek()
         if (token == JsonReader.Token.BEGIN_ARRAY) {

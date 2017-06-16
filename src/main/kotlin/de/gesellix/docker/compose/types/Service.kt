@@ -66,7 +66,7 @@ data class Service(
         var securityOpt: Set<String>? = null,
         var shmSize: Float? = null,
         @ServiceSecretsType
-        var secrets: List<Map<String, ServiceSecret>>? = null,
+        var secrets: ArrayList<Map<String, ServiceSecret?>>? = null,
         var sysctls: Any? = null,
         @Json(name = "stdin_open")
         var stdinOpen: Boolean? = null,

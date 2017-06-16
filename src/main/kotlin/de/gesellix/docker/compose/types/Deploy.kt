@@ -5,16 +5,16 @@ import de.gesellix.docker.compose.adapters.LabelsType
 
 data class Deploy(
 
-        val mode: String,
-        val replicas: Int,
+        var mode: String? = null,
+        var replicas: Int? = null,
         @LabelsType
-        val labels: Labels,
+        var labels: Labels? = null,
         @Json(name = "update_config")
-        val updateConfig: UpdateConfig,
-        val resources: Resources,
+        var updateConfig: UpdateConfig? = null,
+        var resources: Resources? = null,
         @Json(name = "restart_policy")
-        val restartPolicy: RestartPolicy,
-        val placement: Placement,
+        var restartPolicy: RestartPolicy? = null,
+        var placement: Placement? = null,
         @Json(name = "endpoint_mode")
-        val endpointMode: String
+        var endpointMode: String? = null
 )

@@ -4,17 +4,17 @@ import com.squareup.moshi.Json
 
 data class UpdateConfig(
 
-        val parallelism: Int,
+        var parallelism: Int? = null,
 
         //    Duration Delay
-        val delay: String,
+        var delay: String? = null,
 
         @Json(name = "failure_action")
-        val failureAction: String,
+        var failureAction: String? = null,
 
         //    Duration Monitor
-        val monitor: String,
+        var monitor: String? = null,
 
         @Json(name = "max_failure_ratio")
-        val maxFailureRatio: Float
+        var maxFailureRatio: Float? = null
 )
