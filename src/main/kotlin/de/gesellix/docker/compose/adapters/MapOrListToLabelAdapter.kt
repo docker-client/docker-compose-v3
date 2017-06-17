@@ -29,7 +29,18 @@ class MapOrListToLabelAdapter {
             reader.beginObject()
             while (reader.peek() != JsonReader.Token.END_OBJECT) {
                 val name = reader.nextName()
-                val value: String? = if (reader.peek() == JsonReader.Token.NULL) reader.nextNull() else reader.nextString()
+                val value: String? = if (reader.peek() == JsonReader.Token.NULL) {
+                    reader.nextNull()
+                } else if (reader.peek() == JsonReader.Token.NUMBER) {
+                    val d = reader.nextDouble()
+                    if ((d % 1) == 0.0) {
+                        d.toInt().toString()
+                    } else {
+                        d.toString()
+                    }
+                } else {
+                    reader.nextString()
+                }
                 labels.entries[name] = value ?: ""
             }
             reader.endObject()
