@@ -80,7 +80,7 @@ class ListToPortConfigsAdapter {
 
         val (startPort, endPort) = parsePortRange(plainContainerPort)
 
-        val (startHostPort, endHostPort) = listOf(0, 0)
+        var (startHostPort, endHostPort) = listOf(0, 0)
         if (hostPort.isNotEmpty()) {
             val (parsedStart, parsedEnd) = parsePortRange(hostPort)
 
@@ -92,10 +92,12 @@ class ListToPortConfigsAdapter {
                     throw  IllegalStateException("Invalid ranges specified for container and host Ports: '$containerPort' and '$hostPort'")
                 }
             }
+            startHostPort = parsedStart
+            endHostPort = parsedEnd
         }
 
         val portMappings = arrayListOf<Map<String, Any>>()
-        for (i in (0..(endPort - startPort + 1))) {
+        for (i in (0..(endPort - startPort))) {
             containerPort = "${startPort + i}"
             if (hostPort.isNotEmpty()) {
                 hostPort = "${startHostPort + i}"
