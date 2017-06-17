@@ -3,6 +3,7 @@ package de.gesellix.docker.compose.types
 import com.squareup.moshi.Json
 import de.gesellix.docker.compose.adapters.CommandType
 import de.gesellix.docker.compose.adapters.EnvironmentType
+import de.gesellix.docker.compose.adapters.ExposesType
 import de.gesellix.docker.compose.adapters.ExtraHostsType
 import de.gesellix.docker.compose.adapters.LabelsType
 import de.gesellix.docker.compose.adapters.PortConfigsType
@@ -35,7 +36,8 @@ data class Service(
         var envFile: List<String>? = null,
         @EnvironmentType
         var environment: Environment = Environment(),
-        var expose: Set<String>? = null,
+        @ExposesType
+        var expose: Exposes? = null,
         @Json(name = "external_links")
         var externalLinks: Set<String>? = null,
         @Json(name = "extra_hosts")

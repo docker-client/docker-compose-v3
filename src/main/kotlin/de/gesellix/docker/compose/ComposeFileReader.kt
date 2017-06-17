@@ -2,6 +2,7 @@ package de.gesellix.docker.compose
 
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import de.gesellix.docker.compose.adapters.ListToExposeAdapter
 import de.gesellix.docker.compose.adapters.ListToPortConfigsAdapter
 import de.gesellix.docker.compose.adapters.ListToServiceSecretsAdapter
 import de.gesellix.docker.compose.adapters.MapOrListToEnvironmentAdapter
@@ -91,6 +92,7 @@ class ComposeFileReader {
 
         val cfg = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
+                .add(ListToExposeAdapter())
                 .add(ListToPortConfigsAdapter())
                 .add(ListToServiceSecretsAdapter())
                 .add(MapOrListToEnvironmentAdapter())
