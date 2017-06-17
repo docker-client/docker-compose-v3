@@ -58,7 +58,7 @@ class ComposeFileReaderTest extends Specification {
         URL composeFile = getClass().getResource('parse/sample.yaml')
 
         when:
-        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())
 
         then:
         result.services == sampleConfig.services
@@ -68,9 +68,9 @@ class ComposeFileReaderTest extends Specification {
         result == sampleConfig
     }
 
-    def "can load environments as dict and as list"() {
+    def  "can load environments as dict and as list"() {
         given:
-        def expectedEnv = new Environment(entries: [
+        def expectedEnv = new Environment([
                 "FOO" : "1",
                 "BAR" : "2",
                 "BAZ" : "2.5",
@@ -79,7 +79,7 @@ class ComposeFileReaderTest extends Specification {
         URL composeFile = getClass().getResource('environment/sample.yaml')
 
         when:
-        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())
 
         then:
         result.services['dict-env'].environment == expectedEnv
@@ -92,7 +92,7 @@ class ComposeFileReaderTest extends Specification {
         URL composeFile = getClass().getResource('version_3_1/sample.yaml')
 
         when:
-        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())
 
         then:
         result.services == sampleConfig.services
@@ -106,7 +106,7 @@ class ComposeFileReaderTest extends Specification {
         URL composeFile = getClass().getResource('attachable/sample.yaml')
 
         when:
-        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())
 
         then:
         result.networks.mynet1 == sampleConfig.mynet1
@@ -119,7 +119,7 @@ class ComposeFileReaderTest extends Specification {
         URL composeFile = getClass().getResource('portformats/sample.yaml')
 
         when:
-        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())
 
         then:
         result.services.web.ports == sampleConfig
@@ -131,7 +131,7 @@ class ComposeFileReaderTest extends Specification {
         URL composeFile = getClass().getResource('full/sample.yaml')
 
         when:
-        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString())
+        def result = reader.load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())
 
         then:
         result.version == sampleConfig.version
@@ -145,7 +145,7 @@ class ComposeFileReaderTest extends Specification {
     def "can interpolate environment variables"() {
         given:
         def home = "/home/foo"
-        def expectedLabels = new Labels(entries: [
+        def expectedLabels = new Labels([
                 "home1"      : home,
                 "home2"      : home,
                 "nonexistent": "",
@@ -179,14 +179,14 @@ class ComposeFileReaderTest extends Specification {
                         ),
                         "bar": new Service(
                                 image: "busybox",
-                                environment: new Environment(entries: ["FOO": "1"]),
+                                environment: new Environment(["FOO": "1"]),
                                 networks: ["with_ipam": null]
                         )
                 ],
                 networks: [
                         "default"  : new Network(
                                 driver: "bridge",
-                                driverOpts: new DriverOpts(options: ["beep": "boop"])
+                                driverOpts: new DriverOpts(["beep": "boop"])
                         ),
                         "with_ipam": new Network(
                                 ipam: new Ipam(
@@ -198,7 +198,7 @@ class ComposeFileReaderTest extends Specification {
                 volumes: [
                         "hello": new Volume(
                                 driver: "default",
-                                driverOpts: new DriverOpts(options: ["beep": "boop"])
+                                driverOpts: new DriverOpts(["beep": "boop"])
                         )
                 ]
         )
@@ -218,10 +218,14 @@ class ComposeFileReaderTest extends Specification {
                 ],
                 secrets: [
                         super: new Secret(
-                                external: new External(external: true)
+                                null,
+                                new External(external: true),
+                                null
                         ),
                         duper: new Secret(
-                                external: new External(external: true)
+                                null,
+                                new External(external: true),
+                                null
                         )
                 ]
         )
@@ -237,62 +241,64 @@ class ComposeFileReaderTest extends Specification {
     def newSampleConfigPortFormats() {
         return new PortConfigs(portConfigs: [
                 new PortConfig(
-                        mode: "ingress",
-                        target: 8080,
-                        published: 80,
-                        protocol: "tcp"
+                        "ingress",
+                        8080,
+                        80,
+                        "tcp"
                 ),
                 new PortConfig(
-                        mode: "ingress",
-                        target: 8081,
-                        published: 81,
-                        protocol: "tcp"
+                        "ingress",
+                        8081,
+                        81,
+                        "tcp"
                 ),
                 new PortConfig(
-                        mode: "ingress",
-                        target: 8082,
-                        published: 82,
-                        protocol: "tcp"
+                        "ingress",
+                        8082,
+                        82,
+                        "tcp"
                 ),
                 new PortConfig(
-                        mode: "ingress",
-                        target: 8090,
-                        published: 90,
-                        protocol: "udp"
+                        "ingress",
+                        8090,
+                        90,
+                        "udp"
                 ),
                 new PortConfig(
-                        mode: "ingress",
-                        target: 8091,
-                        published: 91,
-                        protocol: "udp"
+                        "ingress",
+                        8091,
+                        91,
+                        "udp"
                 ),
                 new PortConfig(
-                        mode: "ingress",
-                        target: 8092,
-                        published: 92,
-                        protocol: "udp"
+                        "ingress",
+                        8092,
+                        92,
+                        "udp"
                 ),
                 new PortConfig(
-                        mode: "ingress",
-                        target: 8500,
-                        published: 85,
-                        protocol: "tcp"
+                        "ingress",
+                        8500,
+                        85,
+                        "tcp"
                 ),
                 new PortConfig(
-                        mode: "ingress",
-                        target: 8600,
-                        published: 0,
-                        protocol: "tcp"
+                        "ingress",
+                        8600,
+                        0,
+                        "tcp"
                 ),
                 new PortConfig(
-                        target: 53,
-                        published: 10053,
-                        protocol: "udp"
+                        "",
+                        53,
+                        10053,
+                        "udp"
                 ),
                 new PortConfig(
-                        mode: "host",
-                        target: 22,
-                        published: 10022
+                        "host",
+                        22,
+                        10022,
+                        ""
                 )
         ])
     }
@@ -314,7 +320,7 @@ class ComposeFileReaderTest extends Specification {
                 deploy: new Deploy(
                         mode: "replicated",
                         replicas: 6,
-                        labels: new Labels(entries: ["FOO": "BAR"]),
+                        labels: new Labels(["FOO": "BAR"]),
                         updateConfig: new UpdateConfig(
                                 parallelism: 3,
                                 delay: '10s',
@@ -354,16 +360,14 @@ class ComposeFileReaderTest extends Specification {
                         './example1.env',
                         './example2.env'
                 ],
-                environment: new Environment(
-                        entries: [
-                                'RACK_ENV'      : 'development',
-                                'SHOW'          : 'true',
-                                'SESSION_SECRET': '',
-//                                'FOO'           : '1',
-//                                'BAR'           : '2',
-                                'BAZ'           : '3'
-                        ]
-                ),
+                environment: new Environment([
+                        'RACK_ENV'      : 'development',
+                        'SHOW'          : 'true',
+                        'SESSION_SECRET': '',
+//                        'FOO'           : '1',
+//                        'BAR'           : '2',
+                        'BAZ'           : '3'
+                ]),
                 expose: [
                         '3000',
                         '8000'
@@ -373,7 +377,7 @@ class ComposeFileReaderTest extends Specification {
                         "project_db_1:mysql",
                         "project_db_1:postgresql"
                 ],
-                extraHosts: new ExtraHosts(entries: [
+                extraHosts: new ExtraHosts([
                         "otherhost": "50.31.209.229",
                         "somehost" : "162.242.195.82"
                 ]),
@@ -389,7 +393,7 @@ class ComposeFileReaderTest extends Specification {
                 hostname: 'foo',
                 image: 'redis',
                 ipc: 'host',
-                labels: new Labels(entries: [
+                labels: new Labels([
                         'com.example.description': 'Accounting webapp',
                         'com.example.number'     : '42',
                         'com.example.empty-label': ''
@@ -421,142 +425,142 @@ class ComposeFileReaderTest extends Specification {
                 ports: new PortConfigs(
                         portConfigs: [
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 3000,
-                                        published: 0,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        3000,
+                                        0,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 3000,
-                                        published: 0,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        3000,
+                                        0,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 3001,
-                                        published: 0,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        3001,
+                                        0,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 3002,
-                                        published: 0,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        3002,
+                                        0,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 3003,
-                                        published: 0,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        3003,
+                                        0,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 3004,
-                                        published: 0,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        3004,
+                                        0,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 3005,
-                                        published: 0,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        3005,
+                                        0,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 8000,
-                                        published: 8000,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        8000,
+                                        8000,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 8080,
-                                        published: 9090,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        8080,
+                                        9090,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 8081,
-                                        published: 9091,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        8081,
+                                        9091,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 22,
-                                        published: 49100,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        22,
+                                        49100,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 8001,
-                                        published: 8001,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        8001,
+                                        8001,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5000,
-                                        published: 5000,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5000,
+                                        5000,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5001,
-                                        published: 5001,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5001,
+                                        5001,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5002,
-                                        published: 5002,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5002,
+                                        5002,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5003,
-                                        published: 5003,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5003,
+                                        5003,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5004,
-                                        published: 5004,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5004,
+                                        5004,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5005,
-                                        published: 5005,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5005,
+                                        5005,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5006,
-                                        published: 5006,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5006,
+                                        5006,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5007,
-                                        published: 5007,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5007,
+                                        5007,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5008,
-                                        published: 5008,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5008,
+                                        5008,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5009,
-                                        published: 5009,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5009,
+                                        5009,
+                                        'tcp'
                                 ),
                                 new PortConfig(
-                                        mode: 'ingress',
-                                        target: 5010,
-                                        published: 5010,
-                                        protocol: 'tcp'
+                                        'ingress',
+                                        5010,
+                                        5010,
+                                        'tcp'
                                 )
                         ]
                 ),
@@ -613,11 +617,10 @@ class ComposeFileReaderTest extends Specification {
                 "some-network"          : null,
                 "other-network"         : new Network(
                         driver: "overlay",
-                        driverOpts: new DriverOpts(
-                                options: [
-                                        foo: "bar",
-                                        baz: "1"]
-                        ),
+                        driverOpts: new DriverOpts([
+                                foo: "bar",
+                                baz: "1"
+                        ]),
                         ipam: new Ipam(
                                 driver: "overlay",
                                 config: [
@@ -641,11 +644,11 @@ external: true)
                 "some-volume"          : null,
                 "other-volume"         : new Volume(
                         driver: "flocker",
-                        driverOpts: new DriverOpts(
-                                options: [
-                                        foo: "bar",
-                                        baz: "1"]
-                        )),
+                        driverOpts: new DriverOpts([
+                                foo: "bar",
+                                baz: "1"
+                        ])
+                ),
                 "external-volume"      : new Volume(
                         external: new External(
 //                                name: 'external-volume',
