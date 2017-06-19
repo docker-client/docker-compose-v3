@@ -25,7 +25,6 @@ plugins {
 
 apply plugin: 'org.junit.platform.gradle.plugin'
 
-apply plugin: 'groovy'
 apply plugin: 'kotlin'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'maven-publish'
@@ -52,9 +51,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    compile 'org.codehaus.groovy:groovy:2.4.11'
-    compile 'org.codehaus.groovy:groovy-json:2.4.11'
-
     compile 'io.github.microutils:kotlin-logging:1.4.4'
     compile 'org.slf4j:slf4j-api:1.7.25'
     testCompile 'ch.qos.logback:logback-classic:1.2.3'
@@ -62,14 +58,10 @@ dependencies {
     compile 'org.yaml:snakeyaml:1.18'
     compile 'com.squareup.moshi:moshi:1.5.0'
     compile 'com.squareup.moshi:moshi-kotlin:1.5.0'
-    compile 'com.google.code.gson:gson:2.8.1'
+    testCompile 'com.beust:klaxon:0.31'
+
     compile 'com.google.re2j:re2j:1.1'
 //    compile 'com.github.fge:json-schema-validator:2.2.6'
-
-    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
-        exclude module: 'groovy-all'
-    }
-    testCompile 'cglib:cglib-nodep:3.2.5'
 
     testCompile "org.jetbrains.kotlin:kotlin-test"
     testCompile("org.jetbrains.spek:spek-api:$kotlin_version") {

@@ -56,7 +56,7 @@ data class Service(
         @Json(name = "network_mode")
         var networkMode: String? = null,
         @ServiceNetworksType
-        var networks: Map<String, ServiceNetwork>? = null,
+        var networks: Map<String, ServiceNetwork?>? = null,
         var pid: String? = null,
         @PortConfigsType
         var ports: PortConfigs = PortConfigs(),

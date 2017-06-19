@@ -12,6 +12,7 @@ services:
     cgroup_parent: m-executor-abcd
 
     # String or list
+    # TODO test with String
 #    command: bundle exec thin -p 3000
     command: ["bundle", "exec", "thin", "-p", "3000"]
 

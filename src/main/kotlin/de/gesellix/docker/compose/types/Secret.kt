@@ -5,9 +5,9 @@ import de.gesellix.docker.compose.adapters.LabelsType
 
 data class Secret(
 
-        var file: String?,
+        var file: String? = null,
         @ExternalType
         var external: External? = External(),
         @LabelsType
-        var labels: Labels?
+        var labels: Labels? = null
 )
