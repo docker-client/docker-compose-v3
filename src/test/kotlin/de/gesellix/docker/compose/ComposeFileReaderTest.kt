@@ -307,7 +307,7 @@ fun newSampleConfigVersion_3_1(): ComposeConfig {
                         secrets = arrayListOf(
                                 hashMapOf<String, ServiceSecret?>(Pair("super", null)),
                                 // 292 decimal == 0444 octal
-                                hashMapOf<String, ServiceSecret?>(Pair("super", ServiceSecret(source = "duper", mode = 292))))))
+                                hashMapOf<String, ServiceSecret?>(Pair("duper", ServiceSecret(source = "duper", mode = 292))))))
             },
             secrets = hashMapOf<String, Secret>().apply {
                 put("super", Secret(external = External(external = true)))
