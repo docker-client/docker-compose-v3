@@ -1,5 +1,5 @@
 package de.gesellix.docker.compose.types
 
-data class Config(
+data class IpamConfig(
         var subnet: String? = null
 )

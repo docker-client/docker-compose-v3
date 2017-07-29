@@ -4,7 +4,6 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import de.gesellix.docker.compose.types.Command
 import de.gesellix.docker.compose.types.ComposeConfig
-import de.gesellix.docker.compose.types.Config
 import de.gesellix.docker.compose.types.Deploy
 import de.gesellix.docker.compose.types.DriverOpts
 import de.gesellix.docker.compose.types.Environment
@@ -13,6 +12,7 @@ import de.gesellix.docker.compose.types.External
 import de.gesellix.docker.compose.types.ExtraHosts
 import de.gesellix.docker.compose.types.Healthcheck
 import de.gesellix.docker.compose.types.Ipam
+import de.gesellix.docker.compose.types.IpamConfig
 import de.gesellix.docker.compose.types.Labels
 import de.gesellix.docker.compose.types.Limits
 import de.gesellix.docker.compose.types.Logging
@@ -286,7 +286,7 @@ fun newSampleConfig(): ComposeConfig {
                 put("with_ipam", Network(
                         ipam = Ipam(
                                 driver = "default",
-                                config = listOf(Config(subnet = "172.28.0.0/16"))))
+                                config = listOf(IpamConfig(subnet = "172.28.0.0/16"))))
                 )
             },
             hashMapOf<String, Volume>().apply {
@@ -351,7 +351,7 @@ fun newSampleConfigFull(): ComposeConfig {
                             )
                     ),
                     restartPolicy = RestartPolicy(
-                            condition = "on_failure",
+                            condition = "on-failure",
                             delay = "5s",
                             maxAttempts = 3,
                             window = "120s"
@@ -631,8 +631,8 @@ fun newSampleConfigFull(): ComposeConfig {
                 ipam = Ipam(
                         driver = "overlay",
                         config = listOf(
-                                Config("172.16.238.0/24"),
-                                Config("2001:3984:3989::/64")))))
+                                IpamConfig("172.16.238.0/24"),
+                                IpamConfig("2001:3984:3989::/64")))))
         put("external-network", Network(
                 external = External(
                         //name = "external-network",
