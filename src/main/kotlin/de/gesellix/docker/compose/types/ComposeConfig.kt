@@ -6,5 +6,6 @@ data class ComposeConfig(
         var services: Map<String, Service>? = null,
         var networks: Map<String, Network?>? = null,
         var volumes: Map<String, Volume?>? = null,
-        var secrets: Map<String, Secret>? = null
+        var secrets: Map<String, Secret>? = null,
+        var configs: Map<String, Config>? = null
 )

@@ -118,6 +118,17 @@ class ComposeFileReader {
             log.warn("Ignoring deprecated options: $deprecatedProperties")
         }
 
+//        if volume.External.Name == "" {
+//            volume.External.Name = name
+//            volumes[name] = volume
+//        } else {
+//            logrus.Warnf("volume %s: volume.external.name is deprecated in favor of volume.name", name)
+//
+//            if volume.Name != "" {
+//                return nil, errors.Errorf("volume %s: volume.external.name and volume.name conflict; only use volume.name", name)
+//            }
+//        }
+
         return cfg
     }
 

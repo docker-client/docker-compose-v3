@@ -7,12 +7,15 @@ import de.gesellix.docker.compose.adapters.LabelsType
 
 data class Volume(
 
+        var name: String? = "",
+
         var driver: String? = null,
 
         @Json(name = "driver_opts")
         @DriverOptsType
         var driverOpts: DriverOpts = DriverOpts(),
 
+        // Volume.external.name is deprecated and replaced by Volume.name
         @ExternalType
         var external: External = External(),
 
