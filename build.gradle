@@ -51,7 +51,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    compile 'io.github.microutils:kotlin-logging:1.4.5'
+    compile 'io.github.microutils:kotlin-logging:1.4.6'
     compile 'org.slf4j:slf4j-api:1.7.25'
     testCompile 'ch.qos.logback:logback-classic:1.2.3'
 
@@ -154,6 +154,6 @@ buildScan {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.0'
+    gradleVersion = '4.0.2'
     distributionType = Wrapper.DistributionType.ALL
 }
