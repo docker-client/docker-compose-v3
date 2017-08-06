@@ -6,7 +6,7 @@ class ComposeInterpolator {
 
     fun interpolate(composeContent: Map<String, Map<String, Map<String, Any?>?>?>, environment: Map<String, String>): Map<String, Map<String, Map<String, Any?>?>> {
         val result = hashMapOf<String, Map<String, Map<String, Any?>?>>()
-        listOf("services", "networks", "volumes", "secrets").forEach { section ->
+        listOf("services", "networks", "volumes", "secrets", "configs").forEach { section ->
             val sectionConfig = composeContent[section]
             if (sectionConfig != null) {
                 result[section] = interpolateSection(sectionConfig, environment)
