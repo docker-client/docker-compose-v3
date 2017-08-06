@@ -3,6 +3,7 @@ package de.gesellix.docker.compose.adapters
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.ToJson
+import de.gesellix.docker.compose.types.MountPropagation
 import de.gesellix.docker.compose.types.ServiceVolume
 import de.gesellix.docker.compose.types.ServiceVolumeBind
 import de.gesellix.docker.compose.types.ServiceVolumeType
@@ -133,26 +134,9 @@ class ListToServiceVolumesAdapter {
         }
     }
 
-    // Propagation represents the propagation of a mount.
-    enum class Propagation(val propagation: String) {
-        // PropagationRPrivate RPRIVATE
-        PropagationRPrivate("rprivate"),
-        // PropagationPrivate PRIVATE
-        PropagationPrivate("private"),
-        // PropagationRShared RSHARED
-        PropagationRShared("rshared"),
-        // PropagationShared SHARED
-        PropagationShared("shared"),
-        // PropagationRSlave RSLAVE
-        PropagationRSlave("rslave"),
-        // PropagationSlave SLAVE
-        PropagationSlave("slave")
-    }
-
     fun isBindOption(option: String): Boolean {
-        return Propagation.values().find { it.propagation == option } != null
+        return MountPropagation.values().find { it.propagation == option } != null
     }
-
 
     fun populateType(volume: ServiceVolume) {
         if (volume.source.isNullOrEmpty()) {
