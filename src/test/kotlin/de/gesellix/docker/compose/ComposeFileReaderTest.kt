@@ -24,6 +24,8 @@ import de.gesellix.docker.compose.types.Resources
 import de.gesellix.docker.compose.types.RestartPolicy
 import de.gesellix.docker.compose.types.ServiceNetwork
 import de.gesellix.docker.compose.types.ServiceSecret
+import de.gesellix.docker.compose.types.ServiceVolume
+import de.gesellix.docker.compose.types.ServiceVolumeType
 import de.gesellix.docker.compose.types.StackNetwork
 import de.gesellix.docker.compose.types.StackSecret
 import de.gesellix.docker.compose.types.StackService
@@ -186,12 +188,13 @@ class ComposeFileReaderTest : Spek({
             val sampleConfig = newSampleConfigFull()
             val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
 
-            it("should load expanded port formats") {
+            it("should load all top level attributes") {
                 assertEquals(sampleConfig.version, result.version)
                 assertEquals(sampleConfig.volumes, result.volumes)
                 assertEquals(sampleConfig.networks, result.networks)
                 assertEquals(sampleConfig.services, result.services)
                 assertEquals(sampleConfig.secrets, result.secrets)
+//                assertEquals(sampleConfig.configs, result.configs)
                 assertEquals(sampleConfig, result)
             }
         }
@@ -604,14 +607,14 @@ fun newSampleConfigFull(): ComposeConfig {
 //                    fmt.Sprintf("%s/configs:/etc/configs/:ro", homeDir),
 //                    "datavolume:/var/lib/mysql",
 //                },
-            volumes = setOf(
-                    "/var/lib/mysql",
-                    "/opt/data:/var/lib/mysql",
-                    ".:/code",
-                    "./static:/var/www/html",
-                    "~/configs:/etc/configs/:ro",
-                    "datavolume:/var/lib/mysql"
-            ),
+            volumes = arrayListOf(
+                    ServiceVolume(type = ServiceVolumeType.TypeVolume.typeName, target = "/var/lib/mysql"),
+                    ServiceVolume(type = ServiceVolumeType.TypeBind.typeName, source = "/opt/data", target = "/var/lib/mysql"),
+                    ServiceVolume(type = ServiceVolumeType.TypeBind.typeName, source = ".", target = "/code"),
+                    ServiceVolume(type = ServiceVolumeType.TypeBind.typeName, source = "./static", target = "/var/www/html"),
+                    ServiceVolume(type = ServiceVolumeType.TypeBind.typeName, source = "~/configs", target = "/etc/configs/", readOnly = true),
+                    ServiceVolume(type = ServiceVolumeType.TypeVolume.typeName, source = "datavolume", target = "/var/lib/mysql"),
+                    ServiceVolume(type = ServiceVolumeType.TypeBind.typeName, source = "./opt", target = "/opt", consistency = "cached")),
             workingDir = "/code"
     )
 

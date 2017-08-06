@@ -5,6 +5,7 @@ import com.squareup.moshi.Moshi
 import de.gesellix.docker.compose.adapters.ListToExposeAdapter
 import de.gesellix.docker.compose.adapters.ListToPortConfigsAdapter
 import de.gesellix.docker.compose.adapters.ListToServiceSecretsAdapter
+import de.gesellix.docker.compose.adapters.ListToServiceVolumesAdapter
 import de.gesellix.docker.compose.adapters.MapOrListToEnvironmentAdapter
 import de.gesellix.docker.compose.adapters.MapOrListToExtraHosts
 import de.gesellix.docker.compose.adapters.MapOrListToLabelAdapter
@@ -94,6 +95,7 @@ class ComposeFileReader {
                 .add(ListToExposeAdapter())
                 .add(ListToPortConfigsAdapter())
                 .add(ListToServiceSecretsAdapter())
+                .add(ListToServiceVolumesAdapter())
                 .add(MapOrListToEnvironmentAdapter())
                 .add(MapOrListToExtraHosts())
                 .add(MapOrListToLabelAdapter())

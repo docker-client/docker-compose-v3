@@ -5,9 +5,8 @@ data class ServiceVolume(
         var type: String = "",
         var source: String = "",
         var target: String = "",
-        var readOnly: Boolean, // `mapstructure:"read_only"`
+        var readOnly: Boolean = false,
         var consistency: String = "",
-        var bind: ServiceVolumeBind,
-        var volume: ServiceVolumeVolume
-
+        var bind: ServiceVolumeBind? = null,
+        var volume: ServiceVolumeVolume? = null
 )
