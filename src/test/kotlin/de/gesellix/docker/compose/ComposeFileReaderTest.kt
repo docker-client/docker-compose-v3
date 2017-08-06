@@ -16,20 +16,20 @@ import de.gesellix.docker.compose.types.IpamConfig
 import de.gesellix.docker.compose.types.Labels
 import de.gesellix.docker.compose.types.Limits
 import de.gesellix.docker.compose.types.Logging
-import de.gesellix.docker.compose.types.Network
 import de.gesellix.docker.compose.types.Placement
 import de.gesellix.docker.compose.types.PortConfig
 import de.gesellix.docker.compose.types.PortConfigs
 import de.gesellix.docker.compose.types.Reservations
 import de.gesellix.docker.compose.types.Resources
 import de.gesellix.docker.compose.types.RestartPolicy
-import de.gesellix.docker.compose.types.Secret
-import de.gesellix.docker.compose.types.Service
 import de.gesellix.docker.compose.types.ServiceNetwork
 import de.gesellix.docker.compose.types.ServiceSecret
+import de.gesellix.docker.compose.types.StackNetwork
+import de.gesellix.docker.compose.types.StackSecret
+import de.gesellix.docker.compose.types.StackService
+import de.gesellix.docker.compose.types.StackVolume
 import de.gesellix.docker.compose.types.Ulimits
 import de.gesellix.docker.compose.types.UpdateConfig
-import de.gesellix.docker.compose.types.Volume
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -124,9 +124,9 @@ class ComposeFileReaderTest : Spek({
         val composeFile = ComposeFileReaderTest::class.java.getResource("attachable/sample.yaml")
 
         on("ComposeFileReader().load()") {
-            val sampleConfig = hashMapOf<String, Network>().apply {
-                put("mynet1", Network(driver = "overlay", attachable = true))
-                put("mynet2", Network(driver = "bridge", attachable = false))
+            val sampleConfig = hashMapOf<String, StackNetwork>().apply {
+                put("mynet1", StackNetwork(driver = "overlay", attachable = true))
+                put("mynet2", StackNetwork(driver = "bridge", attachable = false))
             }
             val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
 
@@ -266,31 +266,31 @@ fun newSampleConfigPortFormats(): PortConfigs {
 fun newSampleConfig(): ComposeConfig {
     return ComposeConfig(
             "3",
-            hashMapOf<String, Service>().apply {
-                put("foo", Service(
+            hashMapOf<String, StackService>().apply {
+                put("foo", StackService(
                         image = "busybox",
                         environment = Environment(),
                         networks = hashMapOf(Pair("with_me", null)))
                 )
-                put("bar", Service(
+                put("bar", StackService(
                         image = "busybox",
                         environment = Environment(entries = hashMapOf(Pair("FOO", "1"))),
                         networks = hashMapOf(Pair("with_ipam", null)))
                 )
             },
-            hashMapOf<String, Network>().apply {
-                put("default", Network(
+            hashMapOf<String, StackNetwork>().apply {
+                put("default", StackNetwork(
                         driver = "bridge",
                         driverOpts = DriverOpts(options = hashMapOf(Pair("beep", "boop"))))
                 )
-                put("with_ipam", Network(
+                put("with_ipam", StackNetwork(
                         ipam = Ipam(
                                 driver = "default",
                                 config = listOf(IpamConfig(subnet = "172.28.0.0/16"))))
                 )
             },
-            hashMapOf<String, Volume>().apply {
-                put("hello", Volume(
+            hashMapOf<String, StackVolume>().apply {
+                put("hello", StackVolume(
                         driver = "default",
                         driverOpts = DriverOpts(options = hashMapOf(Pair("beep", "boop")))
                 ))
@@ -301,17 +301,17 @@ fun newSampleConfig(): ComposeConfig {
 fun newSampleConfigVersion_3_1(): ComposeConfig {
     return ComposeConfig(
             version = "3.1",
-            services = hashMapOf<String, Service>().apply {
-                put("foo", Service(
+            services = hashMapOf<String, StackService>().apply {
+                put("foo", StackService(
                         image = "busybox",
                         secrets = arrayListOf(
                                 hashMapOf<String, ServiceSecret?>(Pair("super", null)),
                                 // 292 decimal == 0444 octal
                                 hashMapOf<String, ServiceSecret?>(Pair("duper", ServiceSecret(source = "duper", mode = 292))))))
             },
-            secrets = hashMapOf<String, Secret>().apply {
-                put("super", Secret(external = External(external = true)))
-                put("duper", Secret(external = External(external = true)))
+            secrets = hashMapOf<String, StackSecret>().apply {
+                put("super", StackSecret(external = External(external = true)))
+                put("duper", StackSecret(external = External(external = true)))
             })
 }
 
@@ -319,7 +319,7 @@ fun newSampleConfigFull(): ComposeConfig {
 //        workingDir, err := os.Getwd()
 //        homeDir := os.Getenv("HOME")
 
-    val fooService = Service(
+    val fooService = StackService(
             capAdd = setOf("ALL"),
             capDrop = setOf("NET_ADMIN", "SYS_ADMIN"),
             cgroupParent = "m-executor-abcd",
@@ -621,9 +621,9 @@ fun newSampleConfigFull(): ComposeConfig {
 
     composeConfig.services = hashMapOf(Pair("foo", fooService))
 
-    composeConfig.networks = hashMapOf<String, Network?>().apply {
+    composeConfig.networks = hashMapOf<String, StackNetwork?>().apply {
         put("some-network", null)
-        put("other-network", Network(
+        put("other-network", StackNetwork(
                 driver = "overlay",
                 driverOpts = DriverOpts(hashMapOf<String, String>().apply {
                     put("foo", "bar")
@@ -634,33 +634,33 @@ fun newSampleConfigFull(): ComposeConfig {
                         config = listOf(
                                 IpamConfig("172.16.238.0/24"),
                                 IpamConfig("2001:3984:3989::/64")))))
-        put("external-network", Network(
+        put("external-network", StackNetwork(
                 external = External(
                         //name = "external-network",
                         external = true)
         ))
-        put("other-external-network", Network(
+        put("other-external-network", StackNetwork(
                 external = External(
                         name = "my-cool-network",
                         external = true)
         ))
     }
 
-    composeConfig.volumes = hashMapOf<String, Volume?>().apply {
+    composeConfig.volumes = hashMapOf<String, StackVolume?>().apply {
         put("some-volume", null)
-        put("other-volume", Volume(
+        put("other-volume", StackVolume(
                 driver = "flocker",
                 driverOpts = DriverOpts(hashMapOf(
                         Pair("foo", "bar"),
                         Pair("baz", "1")
                 ))
         ))
-        put("external-volume", Volume(
+        put("external-volume", StackVolume(
                 external = External(
                         //name = "external-volume",
                         external = true)
         ))
-        put("other-external-volume", Volume(
+        put("other-external-volume", StackVolume(
                 external = External(
                         name = "my-cool-volume",
                         external = true)

@@ -5,7 +5,7 @@ import de.gesellix.docker.compose.adapters.DriverOptsType
 import de.gesellix.docker.compose.adapters.ExternalType
 import de.gesellix.docker.compose.adapters.LabelsType
 
-data class Network(
+data class StackNetwork(
 
         var driver: String? = null,
         @Json(name = "driver_opts")

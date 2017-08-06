@@ -10,7 +10,7 @@ import de.gesellix.docker.compose.adapters.PortConfigsType
 import de.gesellix.docker.compose.adapters.ServiceNetworksType
 import de.gesellix.docker.compose.adapters.ServiceSecretsType
 
-data class Service(
+data class StackService(
 
         var build: Any? = null,
         @Json(name = "cap_add")
@@ -83,6 +83,7 @@ data class Service(
         @Json(name = "userns_mode")
         var usernsMode: String? = null,
         var volumes: Set<String>? = null,
+//        var volumes: List<ServiceVolume>? = null,
         @Json(name = "working_dir")
         var workingDir: String? = null
 )

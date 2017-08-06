@@ -3,7 +3,7 @@ package de.gesellix.docker.compose.types
 import de.gesellix.docker.compose.adapters.ExternalType
 import de.gesellix.docker.compose.adapters.LabelsType
 
-data class Secret(
+data class StackConfig(
 
         var file: String? = null,
         @ExternalType

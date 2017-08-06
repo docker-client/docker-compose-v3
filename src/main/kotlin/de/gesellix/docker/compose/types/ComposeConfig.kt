@@ -3,9 +3,9 @@ package de.gesellix.docker.compose.types
 data class ComposeConfig(
 
         var version: String? = null,
-        var services: Map<String, Service>? = null,
-        var networks: Map<String, Network?>? = null,
-        var volumes: Map<String, Volume?>? = null,
-        var secrets: Map<String, Secret>? = null,
-        var configs: Map<String, Config>? = null
+        var services: Map<String, StackService>? = null,
+        var networks: Map<String, StackNetwork?>? = null,
+        var volumes: Map<String, StackVolume?>? = null,
+        var secrets: Map<String, StackSecret>? = null,
+        var configs: Map<String, StackConfig>? = null
 )

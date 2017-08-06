@@ -5,7 +5,7 @@ import de.gesellix.docker.compose.adapters.DriverOptsType
 import de.gesellix.docker.compose.adapters.ExternalType
 import de.gesellix.docker.compose.adapters.LabelsType
 
-data class Volume(
+data class StackVolume(
 
         var name: String? = "",
 
@@ -15,7 +15,7 @@ data class Volume(
         @DriverOptsType
         var driverOpts: DriverOpts = DriverOpts(),
 
-        // Volume.external.name is deprecated and replaced by Volume.name
+        // StackVolume.external.name is deprecated and replaced by StackVolume.name
         @ExternalType
         var external: External = External(),
 
