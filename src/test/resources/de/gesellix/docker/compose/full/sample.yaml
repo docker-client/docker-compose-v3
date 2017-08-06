@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 
 services:
   foo:
@@ -32,6 +32,7 @@ services:
         failure_action: continue
         monitor: 60s
         max_failure_ratio: 0.3
+        order: start-first
       resources:
         limits:
           cpus: '0.001'
@@ -284,5 +285,6 @@ volumes:
   other-external-volume:
     # Specifies that a pre-existing volume called "my-cool-volume"
     # can be referred to within this file as "other-external-volume"
+    # This example uses the deprecated "volume.external.name" (replaced by "volume.name")
     external:
       name: my-cool-volume

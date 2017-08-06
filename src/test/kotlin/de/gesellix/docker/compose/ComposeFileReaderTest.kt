@@ -338,7 +338,8 @@ fun newSampleConfigFull(): ComposeConfig {
                             delay = "10s",
                             failureAction = "continue",
                             monitor = "60s",
-                            maxFailureRatio = 0.3f
+                            maxFailureRatio = 0.3f,
+                            order = "start-first"
                     ),
                     resources = Resources(
                             limits = Limits(
@@ -616,7 +617,7 @@ fun newSampleConfigFull(): ComposeConfig {
 
     val composeConfig = ComposeConfig()
 
-    composeConfig.version = "3"
+    composeConfig.version = "3.4"
 
     composeConfig.services = hashMapOf(Pair("foo", fooService))
 

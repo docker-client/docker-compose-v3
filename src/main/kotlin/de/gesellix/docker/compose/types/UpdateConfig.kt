@@ -16,5 +16,7 @@ data class UpdateConfig(
         var monitor: String? = null,
 
         @Json(name = "max_failure_ratio")
-        var maxFailureRatio: Float? = null
+        var maxFailureRatio: Float? = null,
+
+        var order: String? = null
 )
