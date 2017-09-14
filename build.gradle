@@ -2,7 +2,8 @@ import java.text.SimpleDateFormat
 
 buildscript {
     ext {
-        kotlin_version = '1.1.4-2'
+        junit_platform_version = '1.0.0-RC3'
+        kotlin_version = '1.1.4-3'
     }
 
     repositories {
@@ -15,7 +16,7 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC3'
+        classpath "org.junit.platform:junit-platform-gradle-plugin:$junit_platform_version"
     }
 }
 
@@ -73,7 +74,7 @@ dependencies {
         exclude group: 'org.junit.platform'
         exclude group: 'org.jetbrains.kotlin'
     }
-    testRuntime "org.junit.platform:junit-platform-launcher:1.0.0-RC3"
+    testRuntime "org.junit.platform:junit-platform-launcher:$junit_platform_version"
 }
 
 def dependencyVersions = [
