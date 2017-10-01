@@ -2,8 +2,8 @@ import java.text.SimpleDateFormat
 
 buildscript {
     ext {
-        junit_platform_version = '1.0.0-RC3'
-        kotlin_version = '1.1.4-3'
+        junit_platform_version = '1.0.0'
+        kotlin_version = '1.1.51'
     }
 
     repositories {
@@ -59,17 +59,17 @@ dependencies {
     compile 'org.yaml:snakeyaml:1.18'
     compile 'com.squareup.moshi:moshi:1.5.0'
     compile 'com.squareup.moshi:moshi-kotlin:1.5.0'
-    testCompile 'com.beust:klaxon:0.31'
+    testCompile 'com.beust:klaxon:0.32'
 
     compile 'com.google.re2j:re2j:1.1'
 //    compile 'com.github.fge:json-schema-validator:2.2.6'
 
     testCompile "org.jetbrains.kotlin:kotlin-test"
-    testCompile("org.jetbrains.spek:spek-api:1.1.4") {
+    testCompile("org.jetbrains.spek:spek-api:1.1.5") {
 //    testCompile("org.jetbrains.spek:spek-api:$kotlin_version") {
         exclude group: 'org.jetbrains.kotlin'
     }
-    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:1.1.4") {
+    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:1.1.5") {
 //    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:$kotlin_version") {
         exclude group: 'org.junit.platform'
         exclude group: 'org.jetbrains.kotlin'
@@ -155,6 +155,6 @@ buildScan {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
+    gradleVersion = '4.2'
     distributionType = Wrapper.DistributionType.ALL
 }
