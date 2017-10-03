@@ -46,26 +46,26 @@ class ComposeInterpolator {
     }
 
     fun recursiveInterpolate(value: Any?, environment: Map<String, String>): Any? {
-        if (value == null) {
-            return null
-        } else if (value is String) {
-            return template.substitute(value, environment)
-        } else if (value is Map<*, *>) {
-            val interpolatedMap = hashMapOf<Any, Any?>()
-            value.forEach { key, elem ->
-                if (key != null) {
-                    interpolatedMap[key] = recursiveInterpolate(elem, environment)
+        when (value) {
+            null -> return null
+            is String -> return template.substitute(value, environment)
+            is Map<*, *> -> {
+                val interpolatedMap = hashMapOf<Any, Any?>()
+                value.forEach { key, elem ->
+                    if (key != null) {
+                        interpolatedMap[key] = recursiveInterpolate(elem, environment)
+                    }
                 }
+                return interpolatedMap
             }
-            return interpolatedMap
-        } else if (value is List<*>) {
-            val interpolatedList = arrayListOf<Any?>()
-            value.forEach { elem ->
-                interpolatedList.add(recursiveInterpolate(elem, environment))
+            is List<*> -> {
+                val interpolatedList = arrayListOf<Any?>()
+                value.forEach { elem ->
+                    interpolatedList.add(recursiveInterpolate(elem, environment))
+                }
+                return interpolatedList
             }
-            return interpolatedList
-        } else {
-            return value
+            else -> return value
         }
     }
 }

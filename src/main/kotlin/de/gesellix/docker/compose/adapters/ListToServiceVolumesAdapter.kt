@@ -22,69 +22,80 @@ class ListToServiceVolumesAdapter {
     fun fromJson(reader: JsonReader): ArrayList<ServiceVolume> {
         val result = arrayListOf<ServiceVolume>()
         val token = reader.peek()
-        if (token == JsonReader.Token.BEGIN_ARRAY) {
-            reader.beginArray()
-            while (reader.hasNext()) {
-                result.addAll(parseServiceVolumeEntry(reader))
+        when (token) {
+            JsonReader.Token.BEGIN_ARRAY -> {
+                reader.beginArray()
+                while (reader.hasNext()) {
+                    result.addAll(parseServiceVolumeEntry(reader))
+                }
+                reader.endArray()
             }
-            reader.endArray()
-        } else {
-            // ...
+            else -> {
+                // ...
+            }
         }
         return result
     }
 
     fun parseServiceVolumeEntry(reader: JsonReader): List<ServiceVolume> {
         val entryToken = reader.peek()
-        if (entryToken == JsonReader.Token.STRING) {
-            val value = reader.nextString()
-            if (value.isNullOrEmpty()) {
-                throw IllegalStateException("invalid empty volume spec")
-            }
-            if (value.length == 1 || value.length == 2) {
-                return listOf(ServiceVolume(
-                        type = ServiceVolumeType.TypeVolume.typeName,
-                        target = value))
-            }
-
-            val endOfSpec = '0'
-            val spec = "$value$endOfSpec"
-
-            val volume = ServiceVolume()
-            var buf = ""
-            for (char in spec) {
-                if (isWindowsDrive(buf, char)) {
-                    buf = "$buf$char"
-                } else if (char == ':' || char == endOfSpec) {
-                    populateFieldFromBuffer(char, buf, volume)
-                    buf = ""
-                } else {
-                    buf = "$buf$char"
+        when (entryToken) {
+            JsonReader.Token.STRING -> {
+                val value = reader.nextString()
+                if (value.isNullOrEmpty()) {
+                    throw IllegalStateException("invalid empty volume spec")
                 }
-            }
-
-            populateType(volume)
-            return listOf(volume)
-        } else if (entryToken == JsonReader.Token.BEGIN_OBJECT) {
-            reader.beginObject()
-            val volume = ServiceVolume()
-            while (reader.hasNext()) {
-                val name = reader.nextName()
-                val valueType = reader.peek()
-                if (valueType == JsonReader.Token.STRING) {
-                    val value = reader.nextString()
-                    writePropery(volume, name, value)
-                } else if (valueType == JsonReader.Token.NUMBER) {
-                    val value = reader.nextInt()
-                    writePropery(volume, name, value)
-                } else {
-                    // ...
+                if (value.length == 1 || value.length == 2) {
+                    return listOf(ServiceVolume(
+                            type = ServiceVolumeType.TypeVolume.typeName,
+                            target = value))
                 }
+
+                val endOfSpec = '0'
+                val spec = "$value$endOfSpec"
+
+                val volume = ServiceVolume()
+                var buf = ""
+                for (char in spec) {
+                    if (isWindowsDrive(buf, char)) {
+                        buf = "$buf$char"
+                    } else if (char == ':' || char == endOfSpec) {
+                        populateFieldFromBuffer(char, buf, volume)
+                        buf = ""
+                    } else {
+                        buf = "$buf$char"
+                    }
+                }
+
+                populateType(volume)
+                return listOf(volume)
             }
-            reader.endObject()
-            return listOf(volume)
-        } else {
-            // ...
+            JsonReader.Token.BEGIN_OBJECT -> {
+                reader.beginObject()
+                val volume = ServiceVolume()
+                while (reader.hasNext()) {
+                    val name = reader.nextName()
+                    val valueType = reader.peek()
+                    when (valueType) {
+                        JsonReader.Token.STRING -> {
+                            val value = reader.nextString()
+                            writePropery(volume, name, value)
+                        }
+                        JsonReader.Token.NUMBER -> {
+                            val value = reader.nextInt()
+                            writePropery(volume, name, value)
+                        }
+                        else -> {
+                            // ...
+                        }
+                    }
+                }
+                reader.endObject()
+                return listOf(volume)
+            }
+            else -> {
+                // ...
+            }
         }
         return listOf()
     }
@@ -97,17 +108,17 @@ class ListToServiceVolumesAdapter {
     }
 
     fun populateFieldFromBuffer(char: Char, buffer: String, volume: ServiceVolume) {
-        if (buffer.isNullOrEmpty()) {
+        if (buffer.isEmpty()) {
             throw IllegalStateException("empty section between colons")
         }
 
-        if (volume.source.isNullOrEmpty() && char == '0') {
+        if (volume.source.isEmpty() && char == '0') {
             volume.target = buffer
             return
-        } else if (volume.source.isNullOrEmpty()) {
+        } else if (volume.source.isEmpty()) {
             volume.source = buffer
             return
-        } else if (volume.target.isNullOrEmpty()) {
+        } else if (volume.target.isEmpty()) {
             volume.target = buffer
             return
         }
@@ -139,7 +150,7 @@ class ListToServiceVolumesAdapter {
     }
 
     fun populateType(volume: ServiceVolume) {
-        if (volume.source.isNullOrEmpty()) {
+        if (volume.source.isEmpty()) {
             volume.type = ServiceVolumeType.TypeVolume.typeName
         } else if (isFilePath(volume.source)) {
             volume.type = ServiceVolumeType.TypeBind.typeName
