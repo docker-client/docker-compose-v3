@@ -199,6 +199,20 @@ class ComposeFileReaderTest : Spek({
             }
         }
     }
+
+    given("volumes/sample.yaml") {
+
+        val composeFile = ComposeFileReaderTest::class.java.getResource("volumes/sample.yaml")
+
+        on("ComposeFileReader().load()") {
+            val workingDir = Paths.get(composeFile.toURI()).parent.toString()
+            val result = ComposeFileReader().load(composeFile.openStream(), workingDir, System.getenv())!!
+
+            it("should set volume type") {
+                assertEquals(ServiceVolumeType.TypeBind.typeName, result.services!!["foo"]!!.volumes!!.first().type)
+            }
+        }
+    }
 })
 
 fun newSampleConfigPortFormats(): PortConfigs {

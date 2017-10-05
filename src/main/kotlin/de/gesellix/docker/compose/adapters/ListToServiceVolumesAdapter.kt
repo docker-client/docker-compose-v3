@@ -91,6 +91,7 @@ class ListToServiceVolumesAdapter {
                     }
                 }
                 reader.endObject()
+                populateType(volume)
                 return listOf(volume)
             }
             else -> {
@@ -150,6 +151,9 @@ class ListToServiceVolumesAdapter {
     }
 
     fun populateType(volume: ServiceVolume) {
+        if (volume.type.isNotEmpty()) {
+            return
+        }
         if (volume.source.isEmpty()) {
             volume.type = ServiceVolumeType.TypeVolume.typeName
         } else if (isFilePath(volume.source)) {
