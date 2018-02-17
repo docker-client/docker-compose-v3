@@ -2,8 +2,8 @@ import java.text.SimpleDateFormat
 
 buildscript {
     ext {
-        junit_platform_version = '1.0.2'
-        kotlin_version = '1.2.10'
+        junit_platform_version = '1.0.3'
+        kotlin_version = '1.2.21'
     }
 
     repositories {
@@ -21,7 +21,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.gradle.build-scan' version '1.11'
+    id 'com.gradle.build-scan' version '1.12.1'
 }
 
 apply plugin: 'org.junit.platform.gradle.plugin'
@@ -49,28 +49,26 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    compile 'io.github.microutils:kotlin-logging:1.4.8'
+    compile 'io.github.microutils:kotlin-logging:1.5.3'
     compile 'org.slf4j:slf4j-api:1.7.25'
-    testCompile 'ch.qos.logback:logback-classic:1.2.3'
+    testRuntime 'ch.qos.logback:logback-classic:1.2.3'
 
     compile 'org.yaml:snakeyaml:1.19'
     compile 'com.squareup.moshi:moshi:1.5.0'
     compile 'com.squareup.moshi:moshi-kotlin:1.5.0'
-    testCompile 'com.beust:klaxon:0.32'
+    testCompile 'com.beust:klaxon:2.1.7'
 
     compile 'com.google.re2j:re2j:1.1'
 //    compile 'com.github.fge:json-schema-validator:2.2.6'
 
     testCompile "org.jetbrains.kotlin:kotlin-test"
     testCompile("org.jetbrains.spek:spek-api:1.1.5") {
-//    testCompile("org.jetbrains.spek:spek-api:$kotlin_version") {
         exclude group: 'org.jetbrains.kotlin'
     }
     testRuntime("org.jetbrains.spek:spek-junit-platform-engine:1.1.5") {
-//    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:$kotlin_version") {
         exclude group: 'org.junit.platform'
         exclude group: 'org.jetbrains.kotlin'
     }
@@ -155,6 +153,6 @@ buildScan {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '4.5.1'
     distributionType = Wrapper.DistributionType.ALL
 }
