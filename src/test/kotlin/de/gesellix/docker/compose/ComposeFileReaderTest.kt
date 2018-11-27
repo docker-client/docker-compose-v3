@@ -50,7 +50,7 @@ class ComposeFileReaderTest : Spek({
 
                 on("ComposeFileReader().loadYaml()") {
                     val json = ComposeFileReaderTest::class.java.getResourceAsStream("parse/sample.json")?.let { inputStream ->
-                        Parser().parse(inputStream)
+                        Parser.default().parse(inputStream)
                     } as JsonObject
                     val expected = json.map as HashMap<String, Any?>
 
