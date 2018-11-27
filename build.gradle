@@ -2,8 +2,7 @@ import java.text.SimpleDateFormat
 
 buildscript {
     ext {
-        junit_platform_version = '1.0.3'
-        kotlin_version = '1.2.21'
+        kotlin_version = '1.3.10'
     }
 
     repositories {
@@ -13,18 +12,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$junit_platform_version"
     }
 }
 
 plugins {
-    id 'com.gradle.build-scan' version '1.12.1'
 }
-
-apply plugin: 'org.junit.platform.gradle.plugin'
 
 apply plugin: 'kotlin'
 apply plugin: 'com.github.ben-manes.versions'
@@ -52,33 +47,32 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    compile 'io.github.microutils:kotlin-logging:1.5.3'
+    compile 'io.github.microutils:kotlin-logging:1.6.22'
     compile 'org.slf4j:slf4j-api:1.7.25'
     testRuntime 'ch.qos.logback:logback-classic:1.2.3'
 
-    compile 'org.yaml:snakeyaml:1.19'
-    compile 'com.squareup.moshi:moshi:1.5.0'
-    compile 'com.squareup.moshi:moshi-kotlin:1.5.0'
-    testCompile 'com.beust:klaxon:2.1.7'
+    compile 'org.yaml:snakeyaml:1.23'
+    compile 'com.squareup.moshi:moshi:1.8.0'
+    compile 'com.squareup.moshi:moshi-kotlin:1.8.0'
+    testCompile 'com.beust:klaxon:4.0.1'
 
-    compile 'com.google.re2j:re2j:1.1'
+    compile 'com.google.re2j:re2j:1.2'
 //    compile 'com.github.fge:json-schema-validator:2.2.6'
 
     testCompile "org.jetbrains.kotlin:kotlin-test"
-    testCompile("org.jetbrains.spek:spek-api:1.1.5") {
+    testCompile("org.jetbrains.spek:spek-api:1.2.1") {
         exclude group: 'org.jetbrains.kotlin'
     }
-    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:1.1.5") {
+    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:1.2.1") {
         exclude group: 'org.junit.platform'
         exclude group: 'org.jetbrains.kotlin'
     }
-    testRuntime "org.junit.platform:junit-platform-launcher:$junit_platform_version"
+    testRuntime "org.junit.platform:junit-platform-launcher:1.3.2"
 }
 
 def dependencyVersions = [
         "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version",
         "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
-        'org.slf4j:slf4j-api:1.7.25'
 ]
 
 configurations.all {
@@ -99,11 +93,9 @@ compileTestKotlin {
     }
 }
 
-junitPlatform {
-    filters {
-        engines {
-            include 'spek'
-        }
+test {
+    useJUnitPlatform {
+        includeEngines 'spek'
     }
 }
 
@@ -147,12 +139,7 @@ bintray {
 }
 bintrayUpload.dependsOn build
 
-buildScan {
-    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-    licenseAgree = 'yes'
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.5.1'
+task updateWrapper(type: Wrapper) {
+    gradleVersion = '4.10.2'
     distributionType = Wrapper.DistributionType.ALL
 }

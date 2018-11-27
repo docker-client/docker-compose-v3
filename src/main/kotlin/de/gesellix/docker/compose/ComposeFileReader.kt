@@ -1,7 +1,7 @@
 package de.gesellix.docker.compose
 
-import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.gesellix.docker.compose.adapters.ListToExposeAdapter
 import de.gesellix.docker.compose.adapters.ListToPortConfigsAdapter
 import de.gesellix.docker.compose.adapters.ListToServiceSecretsAdapter
