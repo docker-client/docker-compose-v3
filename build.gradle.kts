@@ -17,7 +17,7 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.3.11"
+    kotlin("jvm") version "1.3.21"
     `maven-publish`
     id("com.github.ben-manes.versions") version "0.20.0"
     id("com.jfrog.bintray") version "1.8.4"
@@ -39,7 +39,7 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
-    compile("io.github.microutils:kotlin-logging:1.6.22")
+    compile("io.github.microutils:kotlin-logging:1.6.24")
     compile("org.slf4j:slf4j-api:1.7.25")
     testRuntime("ch.qos.logback:logback-classic:1.2.3")
 
@@ -59,7 +59,7 @@ dependencies {
         exclude("org.junit.platform")
         exclude("org.jetbrains.kotlin")
     }
-    testRuntime("org.junit.platform:junit-platform-launcher:1.3.2")
+    testRuntime("org.junit.platform:junit-platform-launcher:1.4.0")
 }
 
 val dependencyVersions = listOf(
@@ -91,7 +91,7 @@ tasks {
     }
 
     register<Wrapper>("updateWrapper") {
-        gradleVersion = "5.0"
+        gradleVersion = "5.2.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 }
@@ -103,7 +103,7 @@ tasks {
 
 val sourcesJar by tasks.registering(Jar::class) {
     dependsOn("classes")
-    classifier = "sources"
+    archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }
 
