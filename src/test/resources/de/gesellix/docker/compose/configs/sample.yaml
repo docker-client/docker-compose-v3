@@ -1,0 +1,24 @@
+version: "3"
+services:
+    foo:
+        image: busybox
+        configs:
+            - source: "config-external"
+              target: "/config/external.txt"
+              gid: "1000"
+              uid: "1000"
+              mode: 0444
+            - source: "config-file"
+              target: "/config/file.txt"
+              gid: "1000"
+              uid: "1000"
+              mode: 0644
+            - config-short
+
+config:
+    config-file:
+        file: ./test.txt
+    config-external:
+        external: true
+    config-short:
+        file: ./short.txt
