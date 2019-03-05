@@ -2,42 +2,16 @@ package de.gesellix.docker.compose
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import de.gesellix.docker.compose.types.Command
-import de.gesellix.docker.compose.types.ComposeConfig
-import de.gesellix.docker.compose.types.Deploy
-import de.gesellix.docker.compose.types.DriverOpts
-import de.gesellix.docker.compose.types.Environment
-import de.gesellix.docker.compose.types.Exposes
-import de.gesellix.docker.compose.types.External
-import de.gesellix.docker.compose.types.ExtraHosts
-import de.gesellix.docker.compose.types.Healthcheck
-import de.gesellix.docker.compose.types.Ipam
-import de.gesellix.docker.compose.types.IpamConfig
-import de.gesellix.docker.compose.types.Labels
-import de.gesellix.docker.compose.types.Limits
-import de.gesellix.docker.compose.types.Logging
-import de.gesellix.docker.compose.types.Placement
-import de.gesellix.docker.compose.types.PortConfig
-import de.gesellix.docker.compose.types.PortConfigs
-import de.gesellix.docker.compose.types.Reservations
-import de.gesellix.docker.compose.types.Resources
-import de.gesellix.docker.compose.types.RestartPolicy
-import de.gesellix.docker.compose.types.ServiceNetwork
-import de.gesellix.docker.compose.types.ServiceSecret
-import de.gesellix.docker.compose.types.ServiceVolume
-import de.gesellix.docker.compose.types.ServiceVolumeType
-import de.gesellix.docker.compose.types.StackNetwork
-import de.gesellix.docker.compose.types.StackSecret
-import de.gesellix.docker.compose.types.StackService
-import de.gesellix.docker.compose.types.StackVolume
-import de.gesellix.docker.compose.types.Ulimits
-import de.gesellix.docker.compose.types.UpdateConfig
+import de.gesellix.docker.compose.types.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import java.nio.file.Paths
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class ComposeFileReaderTest : Spek({
 
@@ -210,6 +184,46 @@ class ComposeFileReaderTest : Spek({
 
             it("should set volume type") {
                 assertEquals(ServiceVolumeType.TypeBind.typeName, result.services!!["foo"]!!.volumes!!.first().type)
+            }
+        }
+    }
+
+    given("configs/sample.yaml") {
+
+        val composeFile = ComposeFileReaderTest::class.java.getResource("configs/sample.yaml")
+
+        on("ComposeFileReader().load()") {
+            val workingDir = Paths.get(composeFile.toURI()).parent.toString()
+            val result = ComposeFileReader().load(composeFile.openStream(), workingDir, System.getenv())!!
+
+            val configs = result.services!!["foo"]!!.configs!!
+            it("should have 3 config") {
+                assertEquals(3, configs.size)
+            }
+
+            it("config external") {
+                assertTrue(configs[0].containsKey("config-external"))
+                assertNotNull(configs[0]["config-external"])
+                val serviceConfig = configs[0]["config-external"]!!
+                assertEquals("config-external", serviceConfig.source)
+                assertEquals("/config/external.txt", serviceConfig.target)
+                assertEquals("1000", serviceConfig.uid)
+                assertEquals("1000", serviceConfig.gid)
+                assertEquals("444", serviceConfig.mode.toString(8))
+            }
+            it("config file") {
+                assertTrue(configs[1].containsKey("config-file"))
+                assertNotNull(configs[1]["config-file"])
+                val serviceConfig = configs[1]["config-file"]!!
+                assertEquals("config-file", serviceConfig.source)
+                assertEquals("/config/file.txt", serviceConfig.target)
+                assertEquals("1000", serviceConfig.uid)
+                assertEquals("1000", serviceConfig.gid)
+                assertEquals("644", serviceConfig.mode.toString(8))
+            }
+            it("config short format") {
+                assertTrue(configs[2].containsKey("config-short"))
+                assertNull(configs[2]["config-short"])
             }
         }
     }
