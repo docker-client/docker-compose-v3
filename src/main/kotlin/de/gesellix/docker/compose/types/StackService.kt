@@ -2,6 +2,7 @@ package de.gesellix.docker.compose.types
 
 import com.squareup.moshi.Json
 import de.gesellix.docker.compose.adapters.CommandType
+import de.gesellix.docker.compose.adapters.EntrypointType
 import de.gesellix.docker.compose.adapters.EnvironmentType
 import de.gesellix.docker.compose.adapters.ExposesType
 import de.gesellix.docker.compose.adapters.ExtraHostsType
@@ -32,7 +33,8 @@ data class StackService(
         @Json(name = "dns_search")
         var dnsSearch: List<String>? = null,
         var domainname: String? = null,
-        var entrypoint: List<String>? = null,
+        @EntrypointType
+        var entrypoint: Entrypoint = Entrypoint(),
         @Json(name = "env_file")
         var envFile: List<String>? = null,
         @EnvironmentType

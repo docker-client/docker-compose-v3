@@ -6,6 +6,7 @@ import de.gesellix.docker.compose.types.Command
 import de.gesellix.docker.compose.types.ComposeConfig
 import de.gesellix.docker.compose.types.Deploy
 import de.gesellix.docker.compose.types.DriverOpts
+import de.gesellix.docker.compose.types.Entrypoint
 import de.gesellix.docker.compose.types.Environment
 import de.gesellix.docker.compose.types.Exposes
 import de.gesellix.docker.compose.types.External
@@ -385,7 +386,7 @@ fun newSampleConfigFull(): ComposeConfig {
                     "dc1.example.com",
                     "dc2.example.com"),
             domainname = "foo.com",
-            entrypoint = listOf("/code/entrypoint.sh", "-p", "3000"),
+            entrypoint = Entrypoint(parts = arrayListOf("/code/entrypoint.sh", "-p", "3000")),
             envFile = listOf(
                     "./example1.env",
                     "./example2.env"

@@ -12,6 +12,7 @@ import de.gesellix.docker.compose.adapters.MapOrListToLabelAdapter
 import de.gesellix.docker.compose.adapters.MapToDriverOptsAdapter
 import de.gesellix.docker.compose.adapters.MapToExternalAdapter
 import de.gesellix.docker.compose.adapters.StringOrListToCommandAdapter
+import de.gesellix.docker.compose.adapters.StringOrListToEntrypointAdapter
 import de.gesellix.docker.compose.adapters.StringToServiceNetworksAdapter
 import de.gesellix.docker.compose.interpolation.ComposeInterpolator
 import de.gesellix.docker.compose.types.ComposeConfig
@@ -101,6 +102,7 @@ class ComposeFileReader {
                 .add(MapOrListToLabelAdapter())
                 .add(MapToDriverOptsAdapter())
                 .add(MapToExternalAdapter())
+                .add(StringOrListToEntrypointAdapter())
                 .add(StringOrListToCommandAdapter())
                 .add(StringToServiceNetworksAdapter())
                 .build()
