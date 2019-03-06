@@ -10,7 +10,6 @@ class ListToServiceConfigsAdapter {
 
 
     @ToJson
-    @Suppress("UNUSED_PARAMETER")
     fun toJson(@ServiceConfigsType configs: ArrayList<Map<String, ServiceConfig?>>): List<Map<String, Any>> {
         throw UnsupportedOperationException()
     }

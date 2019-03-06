@@ -1,7 +1,16 @@
 package de.gesellix.docker.compose.types
 
 import com.squareup.moshi.Json
-import de.gesellix.docker.compose.adapters.*
+import de.gesellix.docker.compose.adapters.CommandType
+import de.gesellix.docker.compose.adapters.EnvironmentType
+import de.gesellix.docker.compose.adapters.ExposesType
+import de.gesellix.docker.compose.adapters.ExtraHostsType
+import de.gesellix.docker.compose.adapters.LabelsType
+import de.gesellix.docker.compose.adapters.PortConfigsType
+import de.gesellix.docker.compose.adapters.ServiceNetworksType
+import de.gesellix.docker.compose.adapters.ServiceSecretsType
+import de.gesellix.docker.compose.adapters.ServiceVolumesType
+import de.gesellix.docker.compose.adapters.ServiceConfigsType
 
 data class StackService(
 
