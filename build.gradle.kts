@@ -19,7 +19,7 @@ buildscript {
 plugins {
     kotlin("jvm") version "1.3.21"
     `maven-publish`
-    id("com.github.ben-manes.versions") version "0.20.0"
+    id("com.github.ben-manes.versions") version "0.21.0"
     id("com.jfrog.bintray") version "1.8.4"
 }
 
@@ -39,14 +39,14 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
-    compile("io.github.microutils:kotlin-logging:1.6.24")
+    compile("io.github.microutils:kotlin-logging:1.6.25")
     compile("org.slf4j:slf4j-api:1.7.25")
     testRuntime("ch.qos.logback:logback-classic:1.2.3")
 
-    compile("org.yaml:snakeyaml:1.23")
+    compile("org.yaml:snakeyaml:1.24")
     compile("com.squareup.moshi:moshi:1.8.0")
     compile("com.squareup.moshi:moshi-kotlin:1.8.0")
-    testCompile("com.beust:klaxon:5.0.2")
+    testCompile("com.beust:klaxon:5.0.5")
 
     compile("com.google.re2j:re2j:1.2")
 //    compile("com.github.fge:json-schema-validator:2.2.6")
@@ -90,8 +90,8 @@ tasks {
         dependsOn("build")
     }
 
-    register<Wrapper>("updateWrapper") {
-        gradleVersion = "5.2.1"
+    wrapper {
+        gradleVersion = "5.3"
         distributionType = Wrapper.DistributionType.ALL
     }
 }
