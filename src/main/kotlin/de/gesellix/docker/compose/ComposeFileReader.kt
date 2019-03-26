@@ -4,6 +4,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.gesellix.docker.compose.adapters.ListToExposeAdapter
 import de.gesellix.docker.compose.adapters.ListToPortConfigsAdapter
+import de.gesellix.docker.compose.adapters.ListToServiceConfigsAdapter
 import de.gesellix.docker.compose.adapters.ListToServiceSecretsAdapter
 import de.gesellix.docker.compose.adapters.ListToServiceVolumesAdapter
 import de.gesellix.docker.compose.adapters.MapOrListToEnvironmentAdapter
@@ -14,7 +15,6 @@ import de.gesellix.docker.compose.adapters.MapToExternalAdapter
 import de.gesellix.docker.compose.adapters.StringOrListToCommandAdapter
 import de.gesellix.docker.compose.adapters.StringOrListToEntrypointAdapter
 import de.gesellix.docker.compose.adapters.StringToServiceNetworksAdapter
-import de.gesellix.docker.compose.adapters.ListToServiceConfigsAdapter
 import de.gesellix.docker.compose.interpolation.ComposeInterpolator
 import de.gesellix.docker.compose.types.ComposeConfig
 import mu.KotlinLogging

@@ -2,6 +2,7 @@ package de.gesellix.docker.compose.types
 
 // MountPropagation represents the propagation of a mount.
 enum class MountPropagation(val propagation: String) {
+
     // PropagationRPrivate RPRIVATE
     PropagationRPrivate("rprivate"),
     // PropagationPrivate PRIVATE

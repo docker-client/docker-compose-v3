@@ -9,7 +9,6 @@ import de.gesellix.docker.compose.types.ServiceVolumeBind
 import de.gesellix.docker.compose.types.ServiceVolumeType
 import de.gesellix.docker.compose.types.ServiceVolumeVolume
 
-
 class ListToServiceVolumesAdapter {
 
     @ToJson

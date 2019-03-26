@@ -5,9 +5,7 @@ import com.squareup.moshi.JsonReader
 import com.squareup.moshi.ToJson
 import de.gesellix.docker.compose.types.ServiceConfig
 
-
 class ListToServiceConfigsAdapter {
-
 
     @ToJson
     fun toJson(@ServiceConfigsType configs: ArrayList<Map<String, ServiceConfig?>>): List<Map<String, Any>> {
@@ -66,5 +64,4 @@ class ListToServiceConfigsAdapter {
         }
         return listOf()
     }
-
 }
