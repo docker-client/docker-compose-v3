@@ -6,6 +6,5 @@ data class ServiceConfig(
         var target: String? = "",
         var uid: String? = "",
         var gid: String? = "",
-        var mode: Int = 0
-
+        var mode: Int = 0b0100100100 // = from octal 0444
 )
