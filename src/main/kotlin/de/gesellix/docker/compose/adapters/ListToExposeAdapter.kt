@@ -17,18 +17,21 @@ class ListToExposeAdapter {
     fun fromJson(reader: JsonReader): Exposes {
         val exposes = Exposes()
         val token = reader.peek()
-        if (token == JsonReader.Token.BEGIN_ARRAY) {
-            reader.beginArray()
-            while (reader.hasNext()) {
-                if (reader.peek() == JsonReader.Token.NUMBER) {
-                    exposes.entries.add(reader.nextInt().toString())
-                } else {
-                    exposes.entries.add(reader.nextString())
+        when (token) {
+            JsonReader.Token.BEGIN_ARRAY -> {
+                reader.beginArray()
+                while (reader.hasNext()) {
+                    if (reader.peek() == JsonReader.Token.NUMBER) {
+                        exposes.entries.add(reader.nextInt().toString())
+                    } else {
+                        exposes.entries.add(reader.nextString())
+                    }
                 }
+                reader.endArray()
             }
-            reader.endArray()
-        } else {
-            // ...
+            else -> {
+                // ...
+            }
         }
         return exposes
     }

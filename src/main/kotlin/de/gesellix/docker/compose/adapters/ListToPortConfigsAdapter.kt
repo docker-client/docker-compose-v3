@@ -19,46 +19,58 @@ class ListToPortConfigsAdapter {
     fun fromJson(reader: JsonReader): PortConfigs {
         val portConfigs = arrayListOf<PortConfig>()
         val token = reader.peek()
-        if (token == JsonReader.Token.BEGIN_ARRAY) {
-            reader.beginArray()
-            while (reader.hasNext()) {
-                portConfigs.addAll(parsePortConfigEntry(reader))
+        when (token) {
+            JsonReader.Token.BEGIN_ARRAY -> {
+                reader.beginArray()
+                while (reader.hasNext()) {
+                    portConfigs.addAll(parsePortConfigEntry(reader))
+                }
+                reader.endArray()
             }
-            reader.endArray()
-        } else {
-            // ...
+            else -> {
+                // ...
+            }
         }
         return PortConfigs(portConfigs = portConfigs)
     }
 
     fun parsePortConfigEntry(reader: JsonReader): List<PortConfig> {
         val entryToken = reader.peek()
-        if (entryToken == JsonReader.Token.NUMBER) {
-            val value = Integer.toString(reader.nextInt())
-            return parsePortDefinition(value)
-        } else if (entryToken == JsonReader.Token.STRING) {
-            val value = reader.nextString()
-            return parsePortDefinition(value)
-        } else if (entryToken == JsonReader.Token.BEGIN_OBJECT) {
-            reader.beginObject()
-            val portConfig = PortConfig(mode = "", protocol = "", target = 0, published = 0)
-            while (reader.hasNext()) {
-                val name = reader.nextName()
-                val valueType = reader.peek()
-                if (valueType == JsonReader.Token.STRING) {
-                    val value = reader.nextString()
-                    writePropery(portConfig, name, value)
-                } else if (valueType == JsonReader.Token.NUMBER) {
-                    val value = reader.nextInt()
-                    writePropery(portConfig, name, value)
-                } else {
-                    // ...
-                }
+        when (entryToken) {
+            JsonReader.Token.NUMBER -> {
+                val value = Integer.toString(reader.nextInt())
+                return parsePortDefinition(value)
             }
-            reader.endObject()
-            return listOf(portConfig)
-        } else {
-            // ...
+            JsonReader.Token.STRING -> {
+                val value = reader.nextString()
+                return parsePortDefinition(value)
+            }
+            JsonReader.Token.BEGIN_OBJECT -> {
+                reader.beginObject()
+                val portConfig = PortConfig(mode = "", protocol = "", target = 0, published = 0)
+                while (reader.hasNext()) {
+                    val name = reader.nextName()
+                    val valueType = reader.peek()
+                    when (valueType) {
+                        JsonReader.Token.STRING -> {
+                            val value = reader.nextString()
+                            writePropery(portConfig, name, value)
+                        }
+                        JsonReader.Token.NUMBER -> {
+                            val value = reader.nextInt()
+                            writePropery(portConfig, name, value)
+                        }
+                        else -> {
+                            // ...
+                        }
+                    }
+                }
+                reader.endObject()
+                return listOf(portConfig)
+            }
+            else -> {
+                // ...
+            }
         }
         return emptyList()
     }
@@ -206,11 +218,11 @@ class ListToPortConfigsAdapter {
 
     fun splitParts(rawPort: String): List<String> {
         val parts = rawPort.split(':')
-        when (parts.size) {
-            1 -> return listOf("", "", parts[0])
-            2 -> return listOf("", parts[0], parts[1])
-            3 -> return listOf(parts[0], parts[1], parts[2])
-            else -> return listOf(parts.take(parts.size - 2).joinToString(":"), parts[parts.size - 2], "${parts.size - 1}")
+        return when (parts.size) {
+            1 -> listOf("", "", parts[0])
+            2 -> listOf("", parts[0], parts[1])
+            3 -> listOf(parts[0], parts[1], parts[2])
+            else -> listOf(parts.take(parts.size - 2).joinToString(":"), parts[parts.size - 2], "${parts.size - 1}")
         }
     }
 }

@@ -17,16 +17,20 @@ class StringOrListToEntrypointAdapter {
     fun fromJson(reader: JsonReader): Entrypoint {
         val entrypoint = Entrypoint()
         val token = reader.peek()
-        if (token == JsonReader.Token.BEGIN_ARRAY) {
-            reader.beginArray()
-            while (reader.hasNext()) {
+        when (token) {
+            JsonReader.Token.BEGIN_ARRAY -> {
+                reader.beginArray()
+                while (reader.hasNext()) {
+                    entrypoint.parts.add(reader.nextString())
+                }
+                reader.endArray()
+            }
+            JsonReader.Token.STRING -> {
                 entrypoint.parts.add(reader.nextString())
             }
-            reader.endArray()
-        } else if (token == JsonReader.Token.STRING) {
-            entrypoint.parts.add(reader.nextString())
-        } else {
-            // ...
+            else -> {
+                // ...
+            }
         }
         return entrypoint
     }

@@ -17,16 +17,18 @@ class StringOrListToCommandAdapter {
     fun fromJson(reader: JsonReader): Command {
         val command = Command()
         val token = reader.peek()
-        if (token == JsonReader.Token.BEGIN_ARRAY) {
-            reader.beginArray()
-            while (reader.hasNext()) {
-                command.parts.add(reader.nextString())
+        when (token) {
+            JsonReader.Token.BEGIN_ARRAY -> {
+                reader.beginArray()
+                while (reader.hasNext()) {
+                    command.parts.add(reader.nextString())
+                }
+                reader.endArray()
             }
-            reader.endArray()
-        } else if (token == JsonReader.Token.STRING) {
-            command.parts.add(reader.nextString())
-        } else {
-            // ...
+            JsonReader.Token.STRING -> command.parts.add(reader.nextString())
+            else -> {
+                // ...
+            }
         }
         return command
     }

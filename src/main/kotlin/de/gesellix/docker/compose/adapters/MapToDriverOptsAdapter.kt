@@ -17,27 +17,30 @@ class MapToDriverOptsAdapter {
     fun fromJson(reader: JsonReader): DriverOpts {
         val driverOpts = DriverOpts()
         val token = reader.peek()
-        if (token == JsonReader.Token.BEGIN_OBJECT) {
-            reader.beginObject()
-            while (reader.peek() != JsonReader.Token.END_OBJECT) {
-                val name = reader.nextName()
-                val value: String? = if (reader.peek() == JsonReader.Token.NULL) {
-                    reader.nextNull()
-                } else if (reader.peek() == JsonReader.Token.NUMBER) {
-                    val d = reader.nextDouble()
-                    if ((d % 1) == 0.0) {
-                        d.toInt().toString()
+        when (token) {
+            JsonReader.Token.BEGIN_OBJECT -> {
+                reader.beginObject()
+                while (reader.peek() != JsonReader.Token.END_OBJECT) {
+                    val name = reader.nextName()
+                    val value: String? = if (reader.peek() == JsonReader.Token.NULL) {
+                        reader.nextNull()
+                    } else if (reader.peek() == JsonReader.Token.NUMBER) {
+                        val d = reader.nextDouble()
+                        if ((d % 1) == 0.0) {
+                            d.toInt().toString()
+                        } else {
+                            d.toString()
+                        }
                     } else {
-                        d.toString()
+                        reader.nextString()
                     }
-                } else {
-                    reader.nextString()
+                    driverOpts.options[name] = value ?: ""
                 }
-                driverOpts.options[name] = value ?: ""
+                reader.endObject()
             }
-            reader.endObject()
-        } else {
-            // ...
+            else -> {
+                // ...
+            }
         }
         return driverOpts
     }

@@ -17,24 +17,28 @@ class MapOrListToExtraHosts {
     fun fromJson(reader: JsonReader): ExtraHosts {
         val extraHosts = ExtraHosts()
         val token = reader.peek()
-        if (token == JsonReader.Token.BEGIN_ARRAY) {
-            reader.beginArray()
-            while (reader.peek() != JsonReader.Token.END_ARRAY) {
-                val entry = reader.nextString()
-                val keyAndValue = entry.split(Regex(":"), 2)
-                extraHosts.entries[keyAndValue[0]] = if (keyAndValue.size > 1) keyAndValue[1] else ""
+        when (token) {
+            JsonReader.Token.BEGIN_ARRAY -> {
+                reader.beginArray()
+                while (reader.peek() != JsonReader.Token.END_ARRAY) {
+                    val entry = reader.nextString()
+                    val keyAndValue = entry.split(Regex(":"), 2)
+                    extraHosts.entries[keyAndValue[0]] = if (keyAndValue.size > 1) keyAndValue[1] else ""
+                }
+                reader.endArray()
             }
-            reader.endArray()
-        } else if (token == JsonReader.Token.BEGIN_OBJECT) {
-            reader.beginObject()
-            while (reader.peek() != JsonReader.Token.END_OBJECT) {
-                val name = reader.nextName()
-                val value: String? = if (reader.peek() == JsonReader.Token.NULL) reader.nextNull() else reader.nextString()
-                extraHosts.entries[name] = value ?: ""
+            JsonReader.Token.BEGIN_OBJECT -> {
+                reader.beginObject()
+                while (reader.peek() != JsonReader.Token.END_OBJECT) {
+                    val name = reader.nextName()
+                    val value: String? = if (reader.peek() == JsonReader.Token.NULL) reader.nextNull() else reader.nextString()
+                    extraHosts.entries[name] = value ?: ""
+                }
+                reader.endObject()
             }
-            reader.endObject()
-        } else {
-            // ...
+            else -> {
+                // ...
+            }
         }
         return extraHosts
     }

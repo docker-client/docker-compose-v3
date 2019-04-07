@@ -17,17 +17,21 @@ class MapToExternalAdapter {
     fun fromJson(reader: JsonReader): External {
         val external = External()
         val token = reader.peek()
-        if (token == JsonReader.Token.BOOLEAN) {
-            external.external = reader.nextBoolean()
-        } else if (token == JsonReader.Token.BEGIN_OBJECT) {
-            reader.beginObject()
-            val name = reader.nextName()
-            val value = reader.nextString()
-            external.external = true
-            external.name = value
-            reader.endObject()
-        } else {
-            // ...
+        when (token) {
+            JsonReader.Token.BOOLEAN -> {
+                external.external = reader.nextBoolean()
+            }
+            JsonReader.Token.BEGIN_OBJECT -> {
+                reader.beginObject()
+                val name = reader.nextName()
+                val value = reader.nextString()
+                external.external = true
+                external.name = value
+                reader.endObject()
+            }
+            else -> {
+                // ...
+            }
         }
         return external
     }

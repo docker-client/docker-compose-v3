@@ -34,33 +34,37 @@ class ListToServiceConfigsAdapter {
 
     private fun parseServiceConfigEntry(reader: JsonReader): List<Map<String, ServiceConfig?>> {
         val entryToken = reader.peek()
-        if (entryToken == JsonReader.Token.STRING) {
-            val value = reader.nextString()
-            return listOf(mapOf(Pair(value, null)))
-        } else if (entryToken == JsonReader.Token.BEGIN_OBJECT) {
-            reader.beginObject()
-            val config = ServiceConfig()
-            while (reader.hasNext()) {
-                val name = reader.nextName()
-                val valueType = reader.peek()
-                when (valueType) {
-                    JsonReader.Token.STRING -> {
-                        val value = reader.nextString()
-                        writePropery(config, name, value)
-                    }
-                    JsonReader.Token.NUMBER -> {
-                        val value = reader.nextInt()
-                        writePropery(config, name, value)
-                    }
-                    else -> {
-                        // ...
+        when (entryToken) {
+            JsonReader.Token.STRING -> {
+                val value = reader.nextString()
+                return listOf(mapOf(Pair(value, null)))
+            }
+            JsonReader.Token.BEGIN_OBJECT -> {
+                reader.beginObject()
+                val config = ServiceConfig()
+                while (reader.hasNext()) {
+                    val name = reader.nextName()
+                    val valueType = reader.peek()
+                    when (valueType) {
+                        JsonReader.Token.STRING -> {
+                            val value = reader.nextString()
+                            writePropery(config, name, value)
+                        }
+                        JsonReader.Token.NUMBER -> {
+                            val value = reader.nextInt()
+                            writePropery(config, name, value)
+                        }
+                        else -> {
+                            // ...
+                        }
                     }
                 }
+                reader.endObject()
+                return listOf(mapOf(Pair(config.source, config)))
             }
-            reader.endObject()
-            return listOf(mapOf(Pair(config.source, config)))
-        } else {
-            // ...
+            else -> {
+                // ...
+            }
         }
         return listOf()
     }

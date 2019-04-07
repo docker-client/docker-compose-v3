@@ -17,43 +17,54 @@ class ListToServiceSecretsAdapter {
     fun fromJson(reader: JsonReader): ArrayList<Map<String, ServiceSecret?>> {
         val result = arrayListOf<Map<String, ServiceSecret?>>()
         val token = reader.peek()
-        if (token == JsonReader.Token.BEGIN_ARRAY) {
-            reader.beginArray()
-            while (reader.hasNext()) {
-                result.addAll(parseServiceSecretEntry(reader))
+        when (token) {
+            JsonReader.Token.BEGIN_ARRAY -> {
+                reader.beginArray()
+                while (reader.hasNext()) {
+                    result.addAll(parseServiceSecretEntry(reader))
+                }
+                reader.endArray()
             }
-            reader.endArray()
-        } else {
-            // ...
+            else -> {
+                // ...
+            }
         }
         return result
     }
 
     fun parseServiceSecretEntry(reader: JsonReader): List<Map<String, ServiceSecret?>> {
         val entryToken = reader.peek()
-        if (entryToken == JsonReader.Token.STRING) {
-            val value = reader.nextString()
-            return listOf(mapOf(Pair(value, null)))
-        } else if (entryToken == JsonReader.Token.BEGIN_OBJECT) {
-            reader.beginObject()
-            val secret = ServiceSecret()
-            while (reader.hasNext()) {
-                val name = reader.nextName()
-                val valueType = reader.peek()
-                if (valueType == JsonReader.Token.STRING) {
-                    val value = reader.nextString()
-                    writePropery(secret, name, value)
-                } else if (valueType == JsonReader.Token.NUMBER) {
-                    val value = reader.nextInt()
-                    writePropery(secret, name, value)
-                } else {
-                    // ...
-                }
+        when (entryToken) {
+            JsonReader.Token.STRING -> {
+                val value = reader.nextString()
+                return listOf(mapOf(Pair(value, null)))
             }
-            reader.endObject()
-            return listOf(mapOf(Pair(secret.source, secret)))
-        } else {
-            // ...
+            JsonReader.Token.BEGIN_OBJECT -> {
+                reader.beginObject()
+                val secret = ServiceSecret()
+                while (reader.hasNext()) {
+                    val name = reader.nextName()
+                    val valueType = reader.peek()
+                    when (valueType) {
+                        JsonReader.Token.STRING -> {
+                            val value = reader.nextString()
+                            writePropery(secret, name, value)
+                        }
+                        JsonReader.Token.NUMBER -> {
+                            val value = reader.nextInt()
+                            writePropery(secret, name, value)
+                        }
+                        else -> {
+                            // ...
+                        }
+                    }
+                }
+                reader.endObject()
+                return listOf(mapOf(Pair(secret.source, secret)))
+            }
+            else -> {
+                // ...
+            }
         }
         return listOf()
     }
