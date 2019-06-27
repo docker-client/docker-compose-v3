@@ -17,7 +17,7 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.3.21"
+    kotlin("jvm") version "1.3.40"
     `maven-publish`
     id("com.github.ben-manes.versions") version "0.21.0"
     id("com.jfrog.bintray") version "1.8.4"
@@ -39,7 +39,7 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
-    compile("io.github.microutils:kotlin-logging:1.6.25")
+    compile("io.github.microutils:kotlin-logging:1.6.26")
     compile("org.slf4j:slf4j-api:1.7.25")
     testRuntime("ch.qos.logback:logback-classic:1.2.3")
 
@@ -91,7 +91,7 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "5.3.1"
+        gradleVersion = "5.4.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 }
