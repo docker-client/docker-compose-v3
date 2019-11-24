@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
+val slf4jVersion = "1.7.29"
 rootProject.extra.set("artifactVersion", SimpleDateFormat("yyyy-MM-dd\'T\'HH-mm-ss").format(Date()))
 rootProject.extra.set("bintrayDryRun", false)
 
@@ -17,10 +18,12 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.3.40"
+    kotlin("jvm") version "1.3.60"
     `maven-publish`
-    id("com.github.ben-manes.versions") version "0.21.0"
+    id("com.github.ben-manes.versions") version "0.27.0"
     id("com.jfrog.bintray") version "1.8.4"
+    id("net.ossindex.audit") version "0.4.11"
+    id("io.freefair.github.package-registry-maven-publish") version "4.1.5"
 }
 
 java {
@@ -39,16 +42,16 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
-    compile("io.github.microutils:kotlin-logging:1.6.26")
-    compile("org.slf4j:slf4j-api:1.7.25")
+    compile("io.github.microutils:kotlin-logging:1.7.8")
+    compile("org.slf4j:slf4j-api:$slf4jVersion")
     testRuntime("ch.qos.logback:logback-classic:1.2.3")
 
-    compile("org.yaml:snakeyaml:1.24")
-    compile("com.squareup.moshi:moshi:1.8.0")
-    compile("com.squareup.moshi:moshi-kotlin:1.8.0")
-    testCompile("com.beust:klaxon:5.0.5")
+    compile("org.yaml:snakeyaml:1.25")
+    compile("com.squareup.moshi:moshi:1.9.2")
+    compile("com.squareup.moshi:moshi-kotlin:1.9.2")
+    testCompile("com.beust:klaxon:5.2")
 
-    compile("com.google.re2j:re2j:1.2")
+    compile("com.google.re2j:re2j:1.3")
 //    compile("com.github.fge:json-schema-validator:2.2.6")
 
     testCompile("org.jetbrains.kotlin:kotlin-test")
@@ -65,7 +68,9 @@ dependencies {
 val dependencyVersions = listOf(
         "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-        "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+        "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
+        "org.jetbrains.kotlin:kotlin-test:$kotlinVersion",
+        "org.slf4j:slf4j-api:$slf4jVersion"
 )
 
 configurations.all {
@@ -119,12 +124,18 @@ publishing {
             artifactId = "docker-compose"
             version = rootProject.extra["artifactVersion"] as String
             from(components["java"])
-            artifact(sourcesJar.get())
+//            artifact(sourcesJar.get())
         }
     }
 }
 
 fun findProperty(s: String) = project.findProperty(s) as String?
+
+rootProject.github {
+    slug.set("${project.property("github.package-registry.owner")}/${project.property("github.package-registry.repository")}")
+    username.set(System.getenv("GITHUB_ACTOR") ?: findProperty("github.package-registry.username"))
+    token.set(System.getenv("GITHUB_TOKEN") ?: findProperty("github.package-registry.password"))
+}
 
 bintray {
     user = System.getenv()["BINTRAY_USER"] ?: findProperty("bintray.user")
