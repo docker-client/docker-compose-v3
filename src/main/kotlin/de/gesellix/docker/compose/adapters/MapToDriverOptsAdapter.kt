@@ -16,8 +16,7 @@ class MapToDriverOptsAdapter {
     @DriverOptsType
     fun fromJson(reader: JsonReader): DriverOpts {
         val driverOpts = DriverOpts()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_OBJECT -> {
                 reader.beginObject()
                 while (reader.peek() != JsonReader.Token.END_OBJECT) {

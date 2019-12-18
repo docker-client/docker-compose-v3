@@ -16,8 +16,7 @@ class MapToExternalAdapter {
     @ExternalType
     fun fromJson(reader: JsonReader): External {
         val external = External()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BOOLEAN -> {
                 external.external = reader.nextBoolean()
             }

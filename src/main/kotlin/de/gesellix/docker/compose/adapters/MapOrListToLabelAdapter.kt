@@ -16,8 +16,7 @@ class MapOrListToLabelAdapter {
     @LabelsType
     fun fromJson(reader: JsonReader): Labels {
         val labels = Labels()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.peek() != JsonReader.Token.END_ARRAY) {

@@ -16,8 +16,7 @@ class StringOrListToEntrypointAdapter {
     @EntrypointType
     fun fromJson(reader: JsonReader): Entrypoint {
         val entrypoint = Entrypoint()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.hasNext()) {

@@ -16,14 +16,12 @@ class StringToServiceNetworksAdapter {
     @ServiceNetworksType
     fun fromJson(reader: JsonReader): Map<String, ServiceNetwork?> {
         val result = hashMapOf<String, ServiceNetwork?>()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_OBJECT -> {
                 reader.beginObject()
                 while (reader.hasNext()) {
                     val name = reader.nextName()
-                    val valueType = reader.peek()
-                    when (valueType) {
+                    when (reader.peek()) {
                         JsonReader.Token.NULL -> result[name] = reader.nextNull()
                         JsonReader.Token.STRING -> throw UnsupportedOperationException("didn't expect a String value for network $name")
 
@@ -32,8 +30,7 @@ class StringToServiceNetworksAdapter {
                             val serviceNetwork = ServiceNetwork()
                             reader.beginObject()
                             while (reader.hasNext()) {
-                                val attr = reader.nextName()
-                                when (attr) {
+                                when (reader.nextName()) {
                                     "ipv4_address" -> serviceNetwork.ipv4Address = reader.nextString()
                                     "ipv6_address" -> serviceNetwork.ipv6Address = reader.nextString()
                                     "aliases" -> {

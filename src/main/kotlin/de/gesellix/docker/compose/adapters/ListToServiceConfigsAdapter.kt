@@ -16,8 +16,7 @@ class ListToServiceConfigsAdapter {
     @ServiceConfigsType
     fun fromJson(reader: JsonReader): ArrayList<Map<String, ServiceConfig?>> {
         val result = arrayListOf<Map<String, ServiceConfig?>>()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.hasNext()) {
@@ -33,8 +32,7 @@ class ListToServiceConfigsAdapter {
     }
 
     private fun parseServiceConfigEntry(reader: JsonReader): List<Map<String, ServiceConfig?>> {
-        val entryToken = reader.peek()
-        when (entryToken) {
+        when (reader.peek()) {
             JsonReader.Token.STRING -> {
                 val value = reader.nextString()
                 return listOf(mapOf(Pair(value, null)))
@@ -44,8 +42,7 @@ class ListToServiceConfigsAdapter {
                 val config = ServiceConfig()
                 while (reader.hasNext()) {
                     val name = reader.nextName()
-                    val valueType = reader.peek()
-                    when (valueType) {
+                    when (reader.peek()) {
                         JsonReader.Token.STRING -> {
                             val value = reader.nextString()
                             writePropery(config, name, value)

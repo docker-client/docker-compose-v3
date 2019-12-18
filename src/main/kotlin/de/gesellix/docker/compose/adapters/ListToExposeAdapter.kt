@@ -16,8 +16,7 @@ class ListToExposeAdapter {
     @ExposesType
     fun fromJson(reader: JsonReader): Exposes {
         val exposes = Exposes()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.hasNext()) {

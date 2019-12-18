@@ -2,7 +2,7 @@ package de.gesellix.docker.compose.interpolation
 
 class ComposeInterpolator {
 
-    val template = Template()
+    private val template = Template()
 
     fun interpolate(composeContent: Map<String, Map<String, Map<String, Any?>?>?>, environment: Map<String, String>): Map<String, Map<String, Map<String, Any?>?>> {
         val result = hashMapOf<String, Map<String, Map<String, Any?>?>>()
@@ -15,9 +15,9 @@ class ComposeInterpolator {
         return result
     }
 
-    fun interpolateSection(config: Map<String, Map<String, Any?>?>, environment: Map<String, String>): Map<String, Map<String, Any?>?> {
+    private fun interpolateSection(config: Map<String, Map<String, Any?>?>, environment: Map<String, String>): Map<String, Map<String, Any?>?> {
         val result = hashMapOf<String, Map<String, Any?>?>()
-        config.forEach { key, value ->
+        config.forEach { (key, value) ->
             if (value == null) {
                 result[key] = null
             } else {
@@ -31,9 +31,9 @@ class ComposeInterpolator {
         return result
     }
 
-    fun interpolateSectionItem(name: String, config: Map<String, Any?>, environment: Map<String, String>): Map<String, Any?> {
+    private fun interpolateSectionItem(name: String, config: Map<String, Any?>, environment: Map<String, String>): Map<String, Any?> {
         val result = hashMapOf<String, Any?>()
-        config.forEach { key, value ->
+        config.forEach { (key, value) ->
             result[key] = recursiveInterpolate(value, environment)
 //            if err != nil {
 //                return nil, errors.Errorf(
@@ -45,13 +45,13 @@ class ComposeInterpolator {
         return result
     }
 
-    fun recursiveInterpolate(value: Any?, environment: Map<String, String>): Any? {
+    private fun recursiveInterpolate(value: Any?, environment: Map<String, String>): Any? {
         when (value) {
             null -> return null
             is String -> return template.substitute(value, environment)
             is Map<*, *> -> {
                 val interpolatedMap = hashMapOf<Any, Any?>()
-                value.forEach { key, elem ->
+                value.forEach { (key, elem) ->
                     if (key != null) {
                         interpolatedMap[key] = recursiveInterpolate(elem, environment)
                     }
