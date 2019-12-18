@@ -16,8 +16,7 @@ class ListToServiceSecretsAdapter {
     @ServiceSecretsType
     fun fromJson(reader: JsonReader): ArrayList<Map<String, ServiceSecret?>> {
         val result = arrayListOf<Map<String, ServiceSecret?>>()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.hasNext()) {
@@ -32,9 +31,8 @@ class ListToServiceSecretsAdapter {
         return result
     }
 
-    fun parseServiceSecretEntry(reader: JsonReader): List<Map<String, ServiceSecret?>> {
-        val entryToken = reader.peek()
-        when (entryToken) {
+    private fun parseServiceSecretEntry(reader: JsonReader): List<Map<String, ServiceSecret?>> {
+        when (reader.peek()) {
             JsonReader.Token.STRING -> {
                 val value = reader.nextString()
                 return listOf(mapOf(Pair(value, null)))
@@ -44,8 +42,7 @@ class ListToServiceSecretsAdapter {
                 val secret = ServiceSecret()
                 while (reader.hasNext()) {
                     val name = reader.nextName()
-                    val valueType = reader.peek()
-                    when (valueType) {
+                    when (reader.peek()) {
                         JsonReader.Token.STRING -> {
                             val value = reader.nextString()
                             writePropery(secret, name, value)

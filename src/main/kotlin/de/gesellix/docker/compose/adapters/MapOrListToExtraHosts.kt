@@ -16,8 +16,7 @@ class MapOrListToExtraHosts {
     @ExtraHostsType
     fun fromJson(reader: JsonReader): ExtraHosts {
         val extraHosts = ExtraHosts()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.peek() != JsonReader.Token.END_ARRAY) {

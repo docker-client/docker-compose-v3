@@ -16,8 +16,7 @@ class StringOrListToCommandAdapter {
     @CommandType
     fun fromJson(reader: JsonReader): Command {
         val command = Command()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.hasNext()) {

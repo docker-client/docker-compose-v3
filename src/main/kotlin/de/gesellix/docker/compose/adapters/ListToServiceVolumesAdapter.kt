@@ -20,8 +20,7 @@ class ListToServiceVolumesAdapter {
     @ServiceVolumesType
     fun fromJson(reader: JsonReader): ArrayList<ServiceVolume> {
         val result = arrayListOf<ServiceVolume>()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.hasNext()) {
@@ -36,9 +35,8 @@ class ListToServiceVolumesAdapter {
         return result
     }
 
-    fun parseServiceVolumeEntry(reader: JsonReader): List<ServiceVolume> {
-        val entryToken = reader.peek()
-        when (entryToken) {
+    private fun parseServiceVolumeEntry(reader: JsonReader): List<ServiceVolume> {
+        when (reader.peek()) {
             JsonReader.Token.STRING -> {
                 val value = reader.nextString()
                 if (value.isNullOrEmpty()) {
@@ -56,13 +54,13 @@ class ListToServiceVolumesAdapter {
                 val volume = ServiceVolume()
                 var buf = ""
                 for (char in spec) {
-                    if (isWindowsDrive(buf, char)) {
-                        buf = "$buf$char"
+                    buf = if (isWindowsDrive(buf, char)) {
+                        "$buf$char"
                     } else if (char == ':' || char == endOfSpec) {
                         populateFieldFromBuffer(char, buf, volume)
-                        buf = ""
+                        ""
                     } else {
-                        buf = "$buf$char"
+                        "$buf$char"
                     }
                 }
 
@@ -74,8 +72,7 @@ class ListToServiceVolumesAdapter {
                 val volume = ServiceVolume()
                 while (reader.hasNext()) {
                     val name = reader.nextName()
-                    val valueType = reader.peek()
-                    when (valueType) {
+                    when (reader.peek()) {
                         JsonReader.Token.STRING -> {
                             val value = reader.nextString()
                             writePropery(volume, name, value)
@@ -100,14 +97,14 @@ class ListToServiceVolumesAdapter {
         return listOf()
     }
 
-    fun isWindowsDrive(buf: String, c: Char): Boolean {
+    private fun isWindowsDrive(buf: String, c: Char): Boolean {
         return c == ':' && buf.length == 1 && buf[0].isLetter()
 
 //        val firstTwoChars = s.slice(IntRange(0, 1))
 //        return firstTwoChars.first().isLetter() && firstTwoChars.last() == ':'
     }
 
-    fun populateFieldFromBuffer(char: Char, buffer: String, volume: ServiceVolume) {
+    private fun populateFieldFromBuffer(char: Char, buffer: String, volume: ServiceVolume) {
         if (buffer.isEmpty()) {
             throw IllegalStateException("empty section between colons")
         }
@@ -145,24 +142,28 @@ class ListToServiceVolumesAdapter {
         }
     }
 
-    fun isBindOption(option: String): Boolean {
+    private fun isBindOption(option: String): Boolean {
         return MountPropagation.values().find { it.propagation == option } != null
     }
 
-    fun populateType(volume: ServiceVolume) {
+    private fun populateType(volume: ServiceVolume) {
         if (volume.type.isNotEmpty()) {
             return
         }
-        if (volume.source.isEmpty()) {
-            volume.type = ServiceVolumeType.TypeVolume.typeName
-        } else if (isFilePath(volume.source)) {
-            volume.type = ServiceVolumeType.TypeBind.typeName
-        } else {
-            volume.type = ServiceVolumeType.TypeVolume.typeName
+        when {
+            volume.source.isEmpty() -> {
+                volume.type = ServiceVolumeType.TypeVolume.typeName
+            }
+            isFilePath(volume.source) -> {
+                volume.type = ServiceVolumeType.TypeBind.typeName
+            }
+            else -> {
+                volume.type = ServiceVolumeType.TypeVolume.typeName
+            }
         }
     }
 
-    fun isFilePath(source: String): Boolean {
+    private fun isFilePath(source: String): Boolean {
         if (listOf('.', '/', '~').contains(source.first())) {
             return true
         }

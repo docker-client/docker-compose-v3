@@ -18,8 +18,7 @@ class ListToPortConfigsAdapter {
     @PortConfigsType
     fun fromJson(reader: JsonReader): PortConfigs {
         val portConfigs = arrayListOf<PortConfig>()
-        val token = reader.peek()
-        when (token) {
+        when (reader.peek()) {
             JsonReader.Token.BEGIN_ARRAY -> {
                 reader.beginArray()
                 while (reader.hasNext()) {
@@ -35,10 +34,9 @@ class ListToPortConfigsAdapter {
     }
 
     fun parsePortConfigEntry(reader: JsonReader): List<PortConfig> {
-        val entryToken = reader.peek()
-        when (entryToken) {
+        when (reader.peek()) {
             JsonReader.Token.NUMBER -> {
-                val value = Integer.toString(reader.nextInt())
+                val value = reader.nextInt().toString()
                 return parsePortDefinition(value)
             }
             JsonReader.Token.STRING -> {
@@ -50,8 +48,7 @@ class ListToPortConfigsAdapter {
                 val portConfig = PortConfig(mode = "", protocol = "", target = 0, published = 0)
                 while (reader.hasNext()) {
                     val name = reader.nextName()
-                    val valueType = reader.peek()
-                    when (valueType) {
+                    when (reader.peek()) {
                         JsonReader.Token.STRING -> {
                             val value = reader.nextString()
                             writePropery(portConfig, name, value)
@@ -79,7 +76,7 @@ class ListToPortConfigsAdapter {
         var (rawIP, hostPort, containerPort) = splitParts(portSpec)
         val (proto, plainContainerPort) = splitProto(containerPort)
 
-        if (plainContainerPort.isNullOrEmpty()) {
+        if (plainContainerPort.isEmpty()) {
             throw IllegalStateException("No port specified: '$portSpec'")
         }
 
@@ -121,13 +118,13 @@ class ListToPortConfigsAdapter {
             }
             val port = newPort(proto.toLowerCase(), containerPort)
             portMappings.add(hashMapOf<String, Any>().let { mapping ->
-                mapping.put("port", port)
-                mapping.put("binding", hashMapOf<String, Any>().let { binding ->
-                    binding.put("proto", proto.toLowerCase())
-                    binding.put("hostIP", rawIP)
-                    binding.put("hostPort", hostPort)
+                mapping["port"] = port
+                mapping["binding"] = hashMapOf<String, Any>().let { binding ->
+                    binding["proto"] = proto.toLowerCase()
+                    binding["hostIP"] = rawIP
+                    binding["hostPort"] = hostPort
                     binding
-                })
+                }
                 mapping
             })
         }
@@ -164,7 +161,7 @@ class ListToPortConfigsAdapter {
     }
 
     // newPort creates a new instance of a port String given a protocol and port number or port range
-    fun newPort(proto: String, port: String): String {
+    private fun newPort(proto: String, port: String): String {
         // Check for parsing issues on "port" now so we can avoid having
         // to check it later on.
 
@@ -181,7 +178,7 @@ class ListToPortConfigsAdapter {
         return "$portStartInt-$portEndInt/$proto"
     }
 
-    fun parsePortRange(ports: String): List<Int> {
+    private fun parsePortRange(ports: String): List<Int> {
         if (!ports.contains('-')) {
             return listOf(ports.toInt(), ports.toInt())
         }
@@ -195,13 +192,13 @@ class ListToPortConfigsAdapter {
         return listOf(start, end)
     }
 
-    fun validateProto(proto: String) {
+    private fun validateProto(proto: String) {
         if (!listOf("tcp", "udp").contains(proto.toLowerCase())) {
             throw  IllegalStateException("Invalid proto '$proto'")
         }
     }
 
-    fun splitProto(rawPort: String): List<String> {
+    private fun splitProto(rawPort: String): List<String> {
         val parts = rawPort.split('/')
         if (rawPort.isEmpty() || parts.isEmpty() || parts[0].isEmpty()) {
             return listOf("", "")
@@ -216,7 +213,7 @@ class ListToPortConfigsAdapter {
         return listOf(parts[1], parts[0])
     }
 
-    fun splitParts(rawPort: String): List<String> {
+    private fun splitParts(rawPort: String): List<String> {
         val parts = rawPort.split(':')
         return when (parts.size) {
             1 -> listOf("", "", parts[0])

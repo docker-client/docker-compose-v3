@@ -4,10 +4,10 @@ import com.google.re2j.Pattern
 
 class Template {
 
-    val delimiter = "\\$"
-    val substitution = "[_a-z][_a-z0-9]*(?::?-[^}]+)?"
-    val patternString = "$delimiter(?i:(?P<escaped>$delimiter)|(?P<named>$substitution)|{(?P<braced>$substitution)}|(?P<invalid>))"
-    val pattern: Pattern = Pattern.compile(patternString)
+    private val delimiter = "\\$"
+    private val substitution = "[_a-z][_a-z0-9]*(?::?-[^}]+)?"
+    private val patternString = "$delimiter(?i:(?P<escaped>$delimiter)|(?P<named>$substitution)|{(?P<braced>$substitution)}|(?P<invalid>))"
+    private val pattern: Pattern = Pattern.compile(patternString)
 
     fun substitute(input: String, environment: Map<String, String>): String {
         val result = StringBuffer()
@@ -73,7 +73,7 @@ class Template {
 
     data class Partitions(val left: String, val right: String)
 
-    fun partition(s: String, sep: Regex): Partitions {
+    private fun partition(s: String, sep: Regex): Partitions {
         if (s.contains(sep)) {
             val parts = s.split(sep, 2)
             return Partitions(parts[0], parts[1])
@@ -83,7 +83,7 @@ class Template {
 
     data class Result(val result: String?, val found: Boolean)
 
-    fun lookupEnv(name: String, environment: Map<String, String>): Result {
+    private fun lookupEnv(name: String, environment: Map<String, String>): Result {
         return Result(environment[name], environment.containsKey(name))
     }
 }
