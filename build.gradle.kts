@@ -39,36 +39,32 @@ repositories {
 }
 
 dependencies {
-    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
-    compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
-    compile("io.github.microutils:kotlin-logging:1.7.8")
-    compile("org.slf4j:slf4j-api:$slf4jVersion")
-    testRuntime("ch.qos.logback:logback-classic:1.2.3")
+    implementation("io.github.microutils:kotlin-logging:1.7.8")
+    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
-    compile("org.yaml:snakeyaml:1.25")
-    compile("com.squareup.moshi:moshi:1.9.2")
-    compile("com.squareup.moshi:moshi-kotlin:1.9.2")
-    testCompile("com.beust:klaxon:5.2")
+    implementation("org.yaml:snakeyaml:1.25")
+    implementation("com.squareup.moshi:moshi:1.9.2")
+    implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
+    testImplementation("com.beust:klaxon:5.2")
 
-    compile("com.google.re2j:re2j:1.3")
-//    compile("com.github.fge:json-schema-validator:2.2.6")
+    implementation("com.google.re2j:re2j:1.3")
+//    implementation("com.github.fge:json-schema-validator:2.2.6")
 
-    testCompile("org.jetbrains.kotlin:kotlin-test")
-    testCompile("org.jetbrains.spek:spek-api:1.2.1") {
-        exclude("org.jetbrains.kotlin")
-    }
-    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:1.2.1") {
-        exclude("org.junit.platform")
-        exclude("org.jetbrains.kotlin")
-    }
-    testRuntime("org.junit.platform:junit-platform-launcher:1.4.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.9")
+    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.9")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.5.2")
 }
 
 val dependencyVersions = listOf(
         "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-test:$kotlinVersion",
         "org.slf4j:slf4j-api:$slf4jVersion"
 )
@@ -87,7 +83,7 @@ tasks {
 
     withType(Test::class.java) {
         useJUnitPlatform {
-            includeEngines("spek")
+            includeEngines("spek2")
         }
     }
 
