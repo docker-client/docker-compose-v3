@@ -33,10 +33,8 @@ import de.gesellix.docker.compose.types.StackService
 import de.gesellix.docker.compose.types.StackVolume
 import de.gesellix.docker.compose.types.Ulimits
 import de.gesellix.docker.compose.types.UpdateConfig
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.given
-import org.jetbrains.spek.api.dsl.it
-import org.jetbrains.spek.api.dsl.on
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.specification.describe
 import java.nio.file.Paths
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -45,77 +43,93 @@ import kotlin.test.assertTrue
 
 class ComposeFileReaderTest : Spek({
 
-    given("parse/sample.yaml") {
+    describe("a sample compose file") {
 
-        val composeFile = ComposeFileReaderTest::class.java.getResource("parse/sample.yaml")
+        context("ComposeFileReader().loadYaml(parse/sample.yaml)") {
 
-        // TODO do we really need to wrap our `on()` actions with `listOf(...)`?
-        listOf(
+            val composeFile = ComposeFileReaderTest::class.java.getResource("parse/sample.yaml")
+            val json = ComposeFileReaderTest::class.java.getResourceAsStream("parse/sample.json")?.let { inputStream ->
+                Parser.default().parse(inputStream)
+            } as JsonObject
+            val expected = json.map as HashMap<String, Any?>
 
-                on("ComposeFileReader().loadYaml()") {
-                    val json = ComposeFileReaderTest::class.java.getResourceAsStream("parse/sample.json")?.let { inputStream ->
-                        Parser.default().parse(inputStream)
-                    } as JsonObject
-                    val expected = json.map as HashMap<String, Any?>
+            var result = hashMapOf<String, Any?>()
 
-                    val result = ComposeFileReader().loadYaml(composeFile.openStream()) as HashMap<String, Any?>
-                    it("should return the same content as the reference json") {
-                        assertEquals(expected, result)
-                    }
-                },
+            beforeEachTest {
+                result = ComposeFileReader().loadYaml(composeFile.openStream()) as HashMap<String, Any?>
+            }
+            it("should return the same content as the reference json") {
+                assertEquals(expected, result)
+            }
+        }
+        context("ComposeFileReader().load(sampleConfig)") {
 
-                on("ComposeFileReader().load()") {
-                    val expected = newSampleConfig()
-                    val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
+            val composeFile = ComposeFileReaderTest::class.java.getResource("parse/sample.yaml")
+            var expected = ComposeConfig()
+            var result = ComposeConfig()
 
-                    it("should return the same services as the reference") {
-                        assertEquals(expected.services, result.services)
-                    }
-                    it("should return the same networks as the reference") {
-                        assertEquals(expected.networks, result.networks)
-                    }
-                    it("should return the same volumes as the reference") {
-                        assertEquals(expected.volumes, result.volumes)
-                    }
-                    it("should return the same secrets as the reference") {
-                        assertEquals(expected.secrets, result.secrets)
-                    }
-                    it("should return the same result as the reference") {
-                        assertEquals(expected.version, result.version)
-                    }
-                })
-    }
-
-    given("environment/sample.yaml") {
-
-        val composeFile = ComposeFileReaderTest::class.java.getResource("environment/sample.yaml")
-
-        on("ComposeFileReader().load()") {
-            val expectedEnv = Environment(hashMapOf(
-                    Pair("FOO", "1"),
-                    Pair("BAR", "2"),
-                    Pair("BAZ", "2.5"),
-                    Pair("QUUX", "")
-            ))
-            val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
-
-            it("should load environments as dict") {
-                assertEquals(expectedEnv, result.services!!["dict-env"]!!.environment)
+            beforeEachTest {
+                expected = newSampleConfig()
+                result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
             }
 
-            it("should load environments as list") {
-                assertEquals(expectedEnv, result.services!!["list-env"]!!.environment)
+            it("should return the same services as the reference") {
+                assertEquals(expected.services, result.services)
+            }
+            it("should return the same networks as the reference") {
+                assertEquals(expected.networks, result.networks)
+            }
+            it("should return the same volumes as the reference") {
+                assertEquals(expected.volumes, result.volumes)
+            }
+            it("should return the same secrets as the reference") {
+                assertEquals(expected.secrets, result.secrets)
+            }
+            it("should return the same result as the reference") {
+                assertEquals(expected.version, result.version)
             }
         }
     }
 
-    given("version_3_1/sample.yaml") {
+    describe("environment") {
 
-        val composeFile = ComposeFileReaderTest::class.java.getResource("version_3_1/sample.yaml")
+        context("environment/sample.yaml") {
 
-        on("ComposeFileReader().load()") {
+            val composeFile = ComposeFileReaderTest::class.java.getResource("environment/sample.yaml")
+            var expectedEnv = Environment()
+            var result = ComposeConfig()
+
+            beforeEachTest {
+                expectedEnv = Environment(hashMapOf(
+                        Pair("FOO", "1"),
+                        Pair("BAR", "2"),
+                        Pair("BAZ", "2.5"),
+                        Pair("QUUX", "")
+                ))
+                result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
+            }
+
+            it("should load environments as dict") {
+                assertEquals(expectedEnv, result.services!!.getValue("dict-env").environment)
+            }
+
+            it("should load environments as list") {
+                assertEquals(expectedEnv, result.services!!.getValue("list-env").environment)
+            }
+        }
+    }
+
+    describe("version 3.1") {
+
+        context("version_3_1/sample.yaml") {
+
+            val composeFile = ComposeFileReaderTest::class.java.getResource("version_3_1/sample.yaml")
             val sampleConfig = newSampleConfigVersion_3_1()
-            val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
+            var result = ComposeConfig()
+
+            beforeEachTest {
+                result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
+            }
 
             it("should load a config based on a 3.1 schema") {
                 assertEquals(sampleConfig.services, result.services)
@@ -125,16 +139,20 @@ class ComposeFileReaderTest : Spek({
         }
     }
 
-    given("attachable/sample.yaml") {
+    describe("attachable") {
 
-        val composeFile = ComposeFileReaderTest::class.java.getResource("attachable/sample.yaml")
+        context("attachable/sample.yaml") {
 
-        on("ComposeFileReader().load()") {
+            val composeFile = ComposeFileReaderTest::class.java.getResource("attachable/sample.yaml")
             val sampleConfig = hashMapOf<String, StackNetwork>().apply {
                 put("mynet1", StackNetwork(driver = "overlay", attachable = true))
                 put("mynet2", StackNetwork(driver = "bridge", attachable = false))
             }
-            val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
+            var result = ComposeConfig()
+
+            beforeEachTest {
+                result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
+            }
 
             it("should load a config with attachable networks") {
                 assertEquals(sampleConfig["mynet1"], result.networks!!["mynet1"])
@@ -143,24 +161,24 @@ class ComposeFileReaderTest : Spek({
         }
     }
 
-    given("portformats/sample.yaml") {
-        val composeFile = ComposeFileReaderTest::class.java.getResource("portformats/sample.yaml")
+    describe("portformats") {
 
-        on("ComposeFileReader().load()") {
+        context("portformats/sample.yaml") {
+            val composeFile = ComposeFileReaderTest::class.java.getResource("portformats/sample.yaml")
             val sampleConfig = newSampleConfigPortFormats()
             val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
 
             it("should load expanded port formats") {
-                assertEquals(sampleConfig, result.services!!["web"]!!.ports)
+                assertEquals(sampleConfig, result.services!!.getValue("web").ports)
             }
         }
     }
 
-    given("interpolation/sample.yaml") {
+    describe("interpolation") {
 
-        val composeFile = ComposeFileReaderTest::class.java.getResource("interpolation/sample.yaml")
+        context("interpolation/sample.yaml") {
 
-        on("ComposeFileReader().load()") {
+            val composeFile = ComposeFileReaderTest::class.java.getResource("interpolation/sample.yaml")
             val home = "/home/foo"
             val expectedLabels = Labels(hashMapOf<String, String>().apply {
                 put("home1", home)
@@ -177,18 +195,18 @@ class ComposeFileReaderTest : Spek({
             )!!
 
             it("should interpolate environment variables") {
-                assertEquals(expectedLabels, result.services!!["test"]!!.labels)
+                assertEquals(expectedLabels, result.services!!.getValue("test").labels)
                 assertEquals(home, result.networks!!["test"]!!.driver)
                 assertEquals(home, result.volumes!!["test"]!!.driver)
             }
         }
     }
 
-    given("full/sample.yaml") {
+    describe("full sample") {
 
-        val composeFile = ComposeFileReaderTest::class.java.getResource("full/sample.yaml")
+        context("full/sample.yaml") {
 
-        on("ComposeFileReader().load()") {
+            val composeFile = ComposeFileReaderTest::class.java.getResource("full/sample.yaml")
             val sampleConfig = newSampleConfigFull()
             val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
 
@@ -204,29 +222,29 @@ class ComposeFileReaderTest : Spek({
         }
     }
 
-    given("volumes/sample.yaml") {
+    describe("volumes") {
 
-        val composeFile = ComposeFileReaderTest::class.java.getResource("volumes/sample.yaml")
+        context("volumes/sample.yaml") {
 
-        on("ComposeFileReader().load()") {
+            val composeFile = ComposeFileReaderTest::class.java.getResource("volumes/sample.yaml")
             val workingDir = Paths.get(composeFile.toURI()).parent.toString()
             val result = ComposeFileReader().load(composeFile.openStream(), workingDir, System.getenv())!!
 
             it("should set volume type") {
-                assertEquals(ServiceVolumeType.TypeBind.typeName, result.services!!["foo"]!!.volumes!!.first().type)
+                assertEquals(ServiceVolumeType.TypeBind.typeName, result.services!!.getValue("foo").volumes!!.first().type)
             }
         }
     }
 
-    given("configs/sample.yaml") {
+    describe("configs") {
 
-        val composeFile = ComposeFileReaderTest::class.java.getResource("configs/sample.yaml")
+        context("configs/sample.yaml") {
 
-        on("ComposeFileReader().load()") {
+            val composeFile = ComposeFileReaderTest::class.java.getResource("configs/sample.yaml")
             val workingDir = Paths.get(composeFile.toURI()).parent.toString()
             val result = ComposeFileReader().load(composeFile.openStream(), workingDir, System.getenv())!!
 
-            val configs = result.services!!["foo"]!!.configs!!
+            val configs = result.services!!.getValue("foo").configs!!
             it("should have 3 config") {
                 assertEquals(3, configs.size)
             }
