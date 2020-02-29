@@ -4,8 +4,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.text.SimpleDateFormat
 import java.util.*
 
+val junitPlatformVersion = "1.6.0"
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
-val slf4jVersion = "1.7.29"
+val slf4jVersion = "1.7.30"
 rootProject.extra.set("artifactVersion", SimpleDateFormat("yyyy-MM-dd\'T\'HH-mm-ss").format(Date()))
 rootProject.extra.set("bintrayDryRun", false)
 
@@ -46,7 +47,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
     testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
-    implementation("org.yaml:snakeyaml:1.25")
+    implementation("org.yaml:snakeyaml:1.26")
     implementation("com.squareup.moshi:moshi:1.9.2")
     implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
     testImplementation("com.beust:klaxon:5.2")
@@ -57,15 +58,17 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.9")
     testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.9")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.5.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
 }
 
 val dependencyVersions = listOf(
+        "com.squareup.okio:okio:2.4.3",
         "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-test:$kotlinVersion",
+        "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
         "org.slf4j:slf4j-api:$slf4jVersion"
 )
 
