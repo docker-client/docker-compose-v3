@@ -20,7 +20,7 @@ buildscript {
 plugins {
     kotlin("jvm") version "1.3.61"
     id("maven-publish")
-    id("com.github.ben-manes.versions") version "0.27.0"
+    id("com.github.ben-manes.versions") version "0.28.0"
     id("com.jfrog.bintray") version "1.8.4"
     id("net.ossindex.audit") version "0.4.11"
     id("io.freefair.github.package-registry-maven-publish") version "4.1.6"
@@ -92,7 +92,7 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "6.0.1"
+        gradleVersion = "6.2.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 }
