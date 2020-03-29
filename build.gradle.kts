@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.text.SimpleDateFormat
 import java.util.*
 
-val junitPlatformVersion = "1.6.0"
+val junitPlatformVersion = "1.6.1"
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 val slf4jVersion = "1.7.30"
 rootProject.extra.set("artifactVersion", SimpleDateFormat("yyyy-MM-dd\'T\'HH-mm-ss").format(Date()))
@@ -19,7 +19,7 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.3.70"
+    kotlin("jvm") version "1.3.71"
     id("maven-publish")
     id("com.github.ben-manes.versions") version "0.28.0"
     id("com.jfrog.bintray") version "1.8.4"
@@ -40,11 +40,29 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    constraints {
+        implementation("org.slf4j:slf4j-api") {
+            version {
+                strictly("1.7.30")
+            }
+        }
+        listOf("org.jetbrains.kotlin:kotlin-reflect",
+                "org.jetbrains.kotlin:kotlin-stdlib",
+                "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+                "org.jetbrains.kotlin:kotlin-test",
+                "org.jetbrains.kotlin:kotlin-stdlib-common").onEach {
+            implementation(it) {
+                version {
+                    strictly(kotlinVersion)
+                }
+            }
+        }
+    }
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("io.github.microutils:kotlin-logging:1.7.8")
-    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation("io.github.microutils:kotlin-logging:1.7.9")
+    implementation("org.slf4j:slf4j-api")
     testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
     implementation("org.yaml:snakeyaml:1.26")
@@ -56,20 +74,13 @@ dependencies {
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.9")
-    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.9")
+    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.10")
+    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.10")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
 }
 
 val dependencyVersions = listOf(
-        "com.squareup.okio:okio:2.4.3",
-        "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
-        "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-        "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
-        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion",
-        "org.jetbrains.kotlin:kotlin-test:$kotlinVersion",
-        "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
-        "org.slf4j:slf4j-api:$slf4jVersion"
+        "org.junit.platform:junit-platform-engine:$junitPlatformVersion"
 )
 
 configurations.all {
