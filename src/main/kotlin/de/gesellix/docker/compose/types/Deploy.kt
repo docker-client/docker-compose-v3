@@ -16,5 +16,7 @@ data class Deploy(
         var restartPolicy: RestartPolicy? = null,
         var placement: Placement? = null,
         @Json(name = "endpoint_mode")
-        var endpointMode: String? = null
+        var endpointMode: String? = null,
+        @Json(name = "max_replicas_per_node")
+        var maxReplicasPerNode: Int? = null
 )
