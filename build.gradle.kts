@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.text.SimpleDateFormat
 import java.util.*
 
-val junitPlatformVersion = "1.6.1"
+val junitPlatformVersion = "1.6.2"
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 val slf4jVersion = "1.7.30"
 rootProject.extra.set("artifactVersion", SimpleDateFormat("yyyy-MM-dd\'T\'HH-mm-ss").format(Date()))
@@ -19,12 +19,12 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.3.71"
+    kotlin("jvm") version "1.3.72"
     id("maven-publish")
-    id("com.github.ben-manes.versions") version "0.28.0"
-    id("com.jfrog.bintray") version "1.8.4"
+    id("com.github.ben-manes.versions") version "0.29.0"
+    id("com.jfrog.bintray") version "1.8.5"
     id("net.ossindex.audit") version "0.4.11"
-    id("io.freefair.github.package-registry-maven-publish") version "4.1.6"
+    id("io.freefair.github.package-registry-maven-publish") version "5.1.1"
 }
 
 java {
@@ -61,21 +61,21 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("io.github.microutils:kotlin-logging:1.7.9")
+    implementation("io.github.microutils:kotlin-logging:1.8.3")
     implementation("org.slf4j:slf4j-api")
     testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
     implementation("org.yaml:snakeyaml:1.26")
-    implementation("com.squareup.moshi:moshi:1.9.2")
-    implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
-    testImplementation("com.beust:klaxon:5.2")
+    implementation("com.squareup.moshi:moshi:1.9.3")
+    implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
+    testImplementation("com.beust:klaxon:5.4")
 
-    implementation("com.google.re2j:re2j:1.3")
+    implementation("com.google.re2j:re2j:1.4")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.10")
-    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.10")
+    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.12")
+    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.12")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
 }
 
@@ -106,7 +106,7 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "6.3"
+        gradleVersion = "6.5.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 }
