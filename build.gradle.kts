@@ -4,9 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.text.SimpleDateFormat
 import java.util.*
 
-val junitPlatformVersion = "1.6.2"
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
-val slf4jVersion = "1.7.30"
 rootProject.extra.set("artifactVersion", SimpleDateFormat("yyyy-MM-dd\'T\'HH-mm-ss").format(Date()))
 rootProject.extra.set("bintrayDryRun", false)
 
@@ -43,22 +41,33 @@ dependencies {
     constraints {
         implementation("org.slf4j:slf4j-api") {
             version {
-                strictly("1.7.30")
+                strictly("[1.7,1.8)")
+                prefer("1.7.30")
             }
         }
         listOf("org.jetbrains.kotlin:kotlin-reflect",
                 "org.jetbrains.kotlin:kotlin-stdlib",
                 "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
-                "org.jetbrains.kotlin:kotlin-test",
-                "org.jetbrains.kotlin:kotlin-stdlib-common").onEach {
+                "org.jetbrains.kotlin:kotlin-stdlib-common",
+                "org.jetbrains.kotlin:kotlin-test").onEach {
             implementation(it) {
                 version {
-                    strictly(kotlinVersion)
+                    strictly("[1.3,1.5)")
+                    prefer(kotlinVersion)
+                }
+            }
+        }
+        listOf("org.junit.platform:junit-platform-engine",
+                "org.junit.platform:junit-platform-launcher").onEach {
+            testRuntimeOnly(it) {
+                version {
+                    strictly("[1.6,2)")
+                    prefer("1.6.2")
                 }
             }
         }
     }
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     implementation("io.github.microutils:kotlin-logging:1.8.3")
@@ -66,8 +75,8 @@ dependencies {
     testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
     implementation("org.yaml:snakeyaml:1.26")
-    implementation("com.squareup.moshi:moshi:1.9.3")
-    implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
+    implementation("com.squareup.moshi:moshi:1.10.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.10.0")
     testImplementation("com.beust:klaxon:5.4")
 
     implementation("com.google.re2j:re2j:1.4")
@@ -76,12 +85,10 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.12")
     testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.12")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-val dependencyVersions = listOf(
-        "org.junit.platform:junit-platform-engine:$junitPlatformVersion"
-)
+val dependencyVersions = listOf<String>()
 
 configurations.all {
     resolutionStrategy {
@@ -135,14 +142,6 @@ publishing {
             version = rootProject.extra["artifactVersion"] as String
             from(components["java"])
             artifact(sourcesJar.get())
-            versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
-                }
-            }
         }
     }
 }
