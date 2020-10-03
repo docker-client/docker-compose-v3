@@ -19,10 +19,10 @@ buildscript {
 plugins {
     kotlin("jvm") version "1.3.72"
     id("maven-publish")
-    id("com.github.ben-manes.versions") version "0.29.0"
+    id("com.github.ben-manes.versions") version "0.33.0"
     id("com.jfrog.bintray") version "1.8.5"
     id("net.ossindex.audit") version "0.4.11"
-    id("io.freefair.github.package-registry-maven-publish") version "5.1.1"
+    id("io.freefair.github.package-registry-maven-publish") version "5.2.1"
 }
 
 java {
@@ -74,7 +74,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api")
     testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
-    implementation("org.yaml:snakeyaml:1.26")
+    implementation("org.yaml:snakeyaml:1.27")
     implementation("com.squareup.moshi:moshi:1.10.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.10.0")
     testImplementation("com.beust:klaxon:5.4")
