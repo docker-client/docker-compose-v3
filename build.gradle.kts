@@ -1,121 +1,119 @@
-import com.jfrog.bintray.gradle.BintrayExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.text.SimpleDateFormat
 import java.util.*
 
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
-rootProject.extra.set("artifactVersion", SimpleDateFormat("yyyy-MM-dd\'T\'HH-mm-ss").format(Date()))
-rootProject.extra.set("bintrayDryRun", false)
-
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-        mavenCentral()
-    }
-}
 
 plugins {
-    kotlin("jvm") version "1.3.72"
-    id("maven-publish")
-    id("com.github.ben-manes.versions") version "0.33.0"
-    id("com.jfrog.bintray") version "1.8.5"
-    id("net.ossindex.audit") version "0.4.11"
-    id("io.freefair.github.package-registry-maven-publish") version "5.2.1"
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+//    kotlin("jvm") version "1.4.10"
+  kotlin("jvm") version "1.3.72"
+  id("maven-publish")
+  id("signing")
+  id("com.github.ben-manes.versions") version "0.36.0"
+  id("net.ossindex.audit") version "0.4.11"
+  id("io.freefair.maven-central.validate-poms") version "5.3.0"
+  id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
 }
 
 repositories {
-    mavenLocal()
-    jcenter()
-    maven { setUrl("http://dl.bintray.com/jetbrains/spek") }
-    mavenCentral()
+  maven { setUrl("https://dl.bintray.com/jetbrains/spek") }
+  mavenCentral()
 }
 
 dependencies {
-    constraints {
-        implementation("org.slf4j:slf4j-api") {
-            version {
-                strictly("[1.7,1.8)")
-                prefer("1.7.30")
-            }
-        }
-        listOf("org.jetbrains.kotlin:kotlin-reflect",
-                "org.jetbrains.kotlin:kotlin-stdlib",
-                "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
-                "org.jetbrains.kotlin:kotlin-stdlib-common",
-                "org.jetbrains.kotlin:kotlin-test").onEach {
-            implementation(it) {
-                version {
-                    strictly("[1.3,1.5)")
-                    prefer(kotlinVersion)
-                }
-            }
-        }
-        listOf("org.junit.platform:junit-platform-engine",
-                "org.junit.platform:junit-platform-launcher").onEach {
-            testRuntimeOnly(it) {
-                version {
-                    strictly("[1.6,2)")
-                    prefer("1.6.2")
-                }
-            }
-        }
+  constraints {
+    implementation("org.slf4j:slf4j-api") {
+      version {
+        strictly("[1.7,1.8)")
+        prefer("1.7.30")
+      }
     }
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    listOf(
+      "org.jetbrains.kotlin:kotlin-reflect",
+      "org.jetbrains.kotlin:kotlin-stdlib",
+      "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+      "org.jetbrains.kotlin:kotlin-stdlib-common",
+      "org.jetbrains.kotlin:kotlin-test"
+    ).onEach {
+      implementation(it) {
+        version {
+          strictly("[1.3,1.5)")
+          prefer(kotlinVersion)
+        }
+      }
+    }
+    listOf(
+      "org.junit.platform:junit-platform-engine",
+      "org.junit.platform:junit-platform-launcher"
+    ).onEach {
+      testRuntimeOnly(it) {
+        version {
+          strictly("[1.6,2)")
+          prefer("1.6.2")
+        }
+      }
+    }
+  }
+  implementation("org.jetbrains.kotlin:kotlin-stdlib")
+  implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("io.github.microutils:kotlin-logging:1.8.3")
-    implementation("org.slf4j:slf4j-api")
-    testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
+  implementation("io.github.microutils:kotlin-logging:1.8.3")
+  implementation("org.slf4j:slf4j-api")
+  testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
-    implementation("org.yaml:snakeyaml:1.27")
-    implementation("com.squareup.moshi:moshi:1.10.0")
-    implementation("com.squareup.moshi:moshi-kotlin:1.10.0")
-    testImplementation("com.beust:klaxon:5.4")
+  implementation("org.yaml:snakeyaml:1.27")
+  implementation("com.squareup.moshi:moshi:1.10.0")
+  implementation("com.squareup.moshi:moshi-kotlin:1.10.0")
+  testImplementation("com.beust:klaxon:5.4")
 
-    implementation("com.google.re2j:re2j:1.4")
+  implementation("com.google.re2j:re2j:1.4")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.12")
-    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.12")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  testImplementation("org.jetbrains.kotlin:kotlin-test")
+  testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.12")
+  testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.12")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-val dependencyVersions = listOf<String>()
+val dependencyVersions = listOf<String>(
+)
+
+val dependencyGroupVersions = mapOf<String, String>()
 
 configurations.all {
-    resolutionStrategy {
-        failOnVersionConflict()
-        force(dependencyVersions)
+  resolutionStrategy {
+    failOnVersionConflict()
+    force(dependencyVersions)
+    eachDependency {
+      val forcedVersion = dependencyGroupVersions[requested.group]
+      if (forcedVersion != null) {
+        useVersion(forcedVersion)
+      }
     }
+  }
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks {
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
-    }
+  withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
+  }
 
-    withType(Test::class.java) {
-        useJUnitPlatform {
-            includeEngines("spek2")
-        }
+  withType(Test::class.java) {
+    useJUnitPlatform {
+      includeEngines("spek2")
     }
+  }
 
-    bintrayUpload {
-        dependsOn("build")
-    }
-
-    wrapper {
-        gradleVersion = "6.6.1"
-        distributionType = Wrapper.DistributionType.ALL
-    }
+  wrapper {
+    gradleVersion = "6.8.2"
+    distributionType = Wrapper.DistributionType.ALL
+  }
 }
 //compileTestKotlin {
 //    kotlinOptions {
@@ -123,49 +121,89 @@ tasks {
 //    }
 //}
 
+val javadocJar by tasks.registering(Jar::class) {
+  dependsOn("classes")
+  archiveClassifier.set("javadoc")
+  from(tasks.javadoc)
+}
+
 val sourcesJar by tasks.registering(Jar::class) {
-    dependsOn("classes")
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
+  dependsOn("classes")
+  archiveClassifier.set("sources")
+  from(sourceSets.main.get().allSource)
 }
 
 artifacts {
-    add("archives", sourcesJar.get())
-}
-
-val publicationName = "dockerCompose"
-publishing {
-    publications {
-        register(publicationName, MavenPublication::class) {
-            groupId = "de.gesellix"
-            artifactId = "docker-compose"
-            version = rootProject.extra["artifactVersion"] as String
-            from(components["java"])
-            artifact(sourcesJar.get())
-        }
-    }
+  add("archives", sourcesJar.get())
+  add("archives", javadocJar.get())
 }
 
 fun findProperty(s: String) = project.findProperty(s) as String?
 
-rootProject.github {
-    slug.set("${project.property("github.package-registry.owner")}/${project.property("github.package-registry.repository")}")
-    username.set(System.getenv("GITHUB_ACTOR") ?: findProperty("github.package-registry.username"))
-    token.set(System.getenv("GITHUB_TOKEN") ?: findProperty("github.package-registry.password"))
+val isSnapshot = project.version == "unspecified"
+val artifactVersion = if (!isSnapshot) project.version as String else SimpleDateFormat("yyyy-MM-dd\'T\'HH-mm-ss").format(Date())!!
+val publicationName = "dockerCompose"
+publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/${property("github.package-registry.owner")}/${property("github.package-registry.repository")}")
+      credentials {
+        username = System.getenv("GITHUB_ACTOR") ?: findProperty("github.package-registry.username")
+        password = System.getenv("GITHUB_TOKEN") ?: findProperty("github.package-registry.password")
+      }
+    }
+  }
+  publications {
+    register(publicationName, MavenPublication::class) {
+      pom {
+        name.set("docker-compose")
+        description.set("A Docker compose v3 abstraction for the JVM")
+        url.set("https://github.com/docker-client/docker-compose-v3")
+        licenses {
+          license {
+            name.set("MIT")
+            url.set("https://opensource.org/licenses/MIT")
+          }
+        }
+        developers {
+          developer {
+            id.set("gesellix")
+            name.set("Tobias Gesellchen")
+            email.set("tobias@gesellix.de")
+          }
+        }
+        scm {
+          connection.set("scm:git:github.com/docker-client/docker-compose-v3.git")
+          developerConnection.set("scm:git:ssh://github.com/docker-client/docker-compose-v3.git")
+          url.set("https://github.com/docker-client/docker-compose-v3")
+        }
+      }
+      artifactId = "docker-compose"
+      version = artifactVersion
+      from(components["java"])
+      artifact(sourcesJar.get())
+      artifact(javadocJar.get())
+    }
+  }
 }
 
-bintray {
-    user = System.getenv()["BINTRAY_USER"] ?: findProperty("bintray.user")
-    key = System.getenv()["BINTRAY_API_KEY"] ?: findProperty("bintray.key")
-    setPublications(publicationName)
-    pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-        repo = "docker-utils"
-        name = "docker-compose"
-        desc = "A Docker compose v3 abstraction for the JVM"
-        setLicenses("Apache-2.0")
-        setLabels("docker", "compose", "stack", "deploy", "java")
-        version.name = rootProject.extra["artifactVersion"] as String
-        vcsUrl = "https://github.com/docker-client/docker-compose-v3.git"
-    })
-    dryRun = rootProject.extra["bintrayDryRun"] as Boolean
+signing {
+  val signingKey: String? by project
+  val signingPassword: String? by project
+  useInMemoryPgpKeys(signingKey, signingPassword)
+  sign(publishing.publications[publicationName])
+}
+
+nexusPublishing {
+  repositories {
+    if (!isSnapshot) {
+      sonatype {
+        // 'sonatype' is pre-configured for Sonatype Nexus (OSSRH) which is used for The Central Repository
+        stagingProfileId.set(System.getenv("SONATYPE_STAGING_PROFILE_ID") ?: findProperty("sonatype.staging.profile.id")) //can reduce execution time by even 10 seconds
+        username.set(System.getenv("SONATYPE_USERNAME") ?: findProperty("sonatype.username"))
+        password.set(System.getenv("SONATYPE_PASSWORD") ?: findProperty("sonatype.password"))
+      }
+    }
+  }
 }
