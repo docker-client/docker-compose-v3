@@ -109,11 +109,6 @@ tasks {
       includeEngines("spek2")
     }
   }
-
-  wrapper {
-    gradleVersion = "6.8.2"
-    distributionType = Wrapper.DistributionType.ALL
-  }
 }
 //compileTestKotlin {
 //    kotlinOptions {
