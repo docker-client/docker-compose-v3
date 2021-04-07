@@ -1,3 +1,6 @@
+[![Build Status](https://img.shields.io/github/workflow/status/docker-client/docker-compose-v3/Publish?style=for-the-badge)](https://github.com/docker-client/docker-compose-v3/actions)
+[![Maven Central](https://img.shields.io/maven-central/v/de.gesellix/docker-compose.svg?style=for-the-badge&maxAge=86400)](https://search.maven.org/search?q=g:de.gesellix%20AND%20a:docker-compose)
+
 # docker-compose-v3
 
 ### About
@@ -19,4 +22,8 @@ You can find a real life example at the [Docker Client's DeployConfigReader](htt
 
 ### Contributing
 
-Feel free to submit an issue if you'd like to ask a question or propose a new feature (maybe Compose v2 support?). Pull Requests are welcome, too!
+Please submit an issue if you'd like to ask a question or propose a new feature (maybe Compose v2 support?). Pull Requests are welcome, too!
+
+## Publishing/Release Workflow
+
+See RELEASE.md
