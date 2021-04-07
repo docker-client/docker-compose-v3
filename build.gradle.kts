@@ -6,18 +6,17 @@ import java.util.*
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 
 plugins {
-//    kotlin("jvm") version "1.4.10"
+//  kotlin("jvm") version "1.4.20"
   kotlin("jvm") version "1.3.72"
   id("maven-publish")
   id("signing")
-  id("com.github.ben-manes.versions") version "0.36.0"
+  id("com.github.ben-manes.versions") version "0.38.0"
   id("net.ossindex.audit") version "0.4.11"
-  id("io.freefair.maven-central.validate-poms") version "5.3.0"
+  id("io.freefair.maven-central.validate-poms") version "5.3.3.3"
   id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
 }
 
 repositories {
-  maven { setUrl("https://dl.bintray.com/jetbrains/spek") }
   mavenCentral()
 }
 
@@ -50,7 +49,7 @@ dependencies {
       testRuntimeOnly(it) {
         version {
           strictly("[1.6,2)")
-          prefer("1.6.2")
+          prefer("1.7.1")
         }
       }
     }
@@ -58,21 +57,21 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-  implementation("io.github.microutils:kotlin-logging:1.8.3")
+  implementation("io.github.microutils:kotlin-logging:2.0.6")
   implementation("org.slf4j:slf4j-api")
   testRuntimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
   implementation("org.yaml:snakeyaml:1.27")
-  implementation("com.squareup.moshi:moshi:1.10.0")
-  implementation("com.squareup.moshi:moshi-kotlin:1.10.0")
-  testImplementation("com.beust:klaxon:5.4")
+  implementation("com.squareup.moshi:moshi:1.12.0")
+  implementation("com.squareup.moshi:moshi-kotlin:1.12.0")
+  testImplementation("com.beust:klaxon:5.5")
 
-  implementation("com.google.re2j:re2j:1.4")
+  implementation("com.google.re2j:re2j:1.6")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")
-  testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.12")
-  testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.12")
+  testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.15")
+  testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.15")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
