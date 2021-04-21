@@ -7,7 +7,7 @@ val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPlu
 
 plugins {
 //  kotlin("jvm") version "1.4.31"
-  kotlin("jvm") version "1.3.72"
+  kotlin("jvm") version "1.4.32"
   id("maven-publish")
   id("signing")
   id("com.github.ben-manes.versions") version "0.38.0"
