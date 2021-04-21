@@ -70,7 +70,7 @@ dependencies {
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")
-  testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.15")
+  testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.16")
   testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.15")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
