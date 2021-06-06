@@ -80,8 +80,13 @@ val dependencyVersions = listOf<String>(
 
 val dependencyGroupVersions = mapOf<String, String>()
 
+dependencyLocking {
+  lockMode.set(LockMode.STRICT)
+}
+
 configurations.all {
   resolutionStrategy {
+    activateDependencyLocking()
     failOnVersionConflict()
     force(dependencyVersions)
     eachDependency {
