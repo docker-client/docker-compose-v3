@@ -49,7 +49,7 @@ dependencies {
       testRuntimeOnly(it) {
         version {
           strictly("[1.6,2)")
-          prefer("1.7.1")
+          prefer("1.7.2")
         }
       }
     }
