@@ -77,7 +77,7 @@ dependencies {
 val dependencyVersions = listOf(
   "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
   "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
-  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
+  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1"
 )
 
 val dependencyGroupVersions = mapOf<String, String>()
