@@ -36,7 +36,7 @@ dependencies {
     ).onEach {
       implementation(it) {
         version {
-          strictly("[1.3,1.5)")
+          strictly("[1.3,1.6)")
           prefer(kotlinVersion)
         }
       }
@@ -74,13 +74,27 @@ dependencies {
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-val dependencyVersions = listOf<String>(
+val dependencyVersions = listOf(
+  "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
+  "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
+  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
 )
 
 val dependencyGroupVersions = mapOf<String, String>()
 
 dependencyLocking {
   lockMode.set(LockMode.STRICT)
+}
+
+tasks.register("resolveAndLockAll") {
+  doFirst {
+    require(gradle.startParameter.isWriteDependencyLocks)
+  }
+  doLast {
+    configurations.filter {
+      it.isCanBeResolved
+    }.forEach { it.resolve() }
+  }
 }
 
 configurations.all {
@@ -113,11 +127,6 @@ tasks {
     }
   }
 }
-//compileTestKotlin {
-//    kotlinOptions {
-//        jvmTarget = "1.8"
-//    }
-//}
 
 val javadocJar by tasks.registering(Jar::class) {
   dependsOn("classes")
