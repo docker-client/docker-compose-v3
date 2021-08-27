@@ -82,24 +82,8 @@ val dependencyGroupVersions = mapOf(
   "org.junit.jupiter" to "5.7.2"
 )
 
-dependencyLocking {
-  lockMode.set(LockMode.STRICT)
-}
-
-tasks.register("resolveAndLockAll") {
-  doFirst {
-    require(gradle.startParameter.isWriteDependencyLocks)
-  }
-  doLast {
-    configurations.filter {
-      it.isCanBeResolved
-    }.forEach { it.resolve() }
-  }
-}
-
 configurations.all {
   resolutionStrategy {
-    activateDependencyLocking()
     failOnVersionConflict()
     force(dependencyVersions)
     eachDependency {
