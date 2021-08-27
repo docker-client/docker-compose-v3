@@ -24,7 +24,7 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: 'gradle'
       - name: clean build
-        run: ./gradlew clean build --no-daemon --info --stacktrace
+        run: ./gradlew clean build --info --stacktrace
       - name: Publish Test Report
         if: ${{ always() }}
         uses: scacap/action-surefire-report@v1
