@@ -1,12 +1,9 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.text.SimpleDateFormat
 import java.util.*
 
-val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
-
 plugins {
-  kotlin("jvm") version "1.4.31"
+  kotlin("jvm") version "1.5.30"
   id("maven-publish")
   id("signing")
   id("com.github.ben-manes.versions") version "0.39.0"
@@ -37,7 +34,7 @@ dependencies {
       implementation(it) {
         version {
           strictly("[1.3,1.6)")
-          prefer(kotlinVersion)
+          prefer("1.5.30")
         }
       }
     }
@@ -68,16 +65,17 @@ dependencies {
   implementation("com.google.re2j:re2j:1.6")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
   testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.15")
   testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.15")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 val dependencyVersions = listOf(
-  "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-  "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
-  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
+  "org.jetbrains.kotlin:kotlin-stdlib:1.5.30",
+  "org.jetbrains.kotlin:kotlin-stdlib-common:1.5.30",
+  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1",
+  "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1"
 )
 
 val dependencyGroupVersions = mapOf<String, String>()
