@@ -53,7 +53,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-  implementation("io.github.microutils:kotlin-logging:2.0.10")
+  implementation("io.github.microutils:kotlin-logging:2.0.11")
   implementation("org.slf4j:slf4j-api")
   testRuntimeOnly("ch.qos.logback:logback-classic:1.2.5")
 
@@ -78,7 +78,9 @@ val dependencyVersions = listOf(
   "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1"
 )
 
-val dependencyGroupVersions = mapOf<String, String>()
+val dependencyGroupVersions = mapOf(
+  "org.junit.jupiter" to "5.7.2"
+)
 
 dependencyLocking {
   lockMode.set(LockMode.STRICT)
