@@ -72,7 +72,7 @@ dependencies {
 }
 
 val dependencyVersions = listOf(
-  "org.jetbrains.kotlin:kotlin-stdlib:1.5.30",
+  "org.jetbrains.kotlin:kotlin-stdlib:1.5.31",
   "org.jetbrains.kotlin:kotlin-stdlib-common:1.5.30",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"
