@@ -45,7 +45,7 @@ dependencies {
       testRuntimeOnly(it) {
         version {
           strictly("[1.7,2)")
-          prefer("1.8.0")
+          prefer("1.8.1")
         }
       }
     }
@@ -79,7 +79,7 @@ val dependencyVersions = listOf(
 )
 
 val dependencyGroupVersions = mapOf(
-  "org.junit.jupiter" to "5.8.0"
+  "org.junit.jupiter" to "5.8.1"
 )
 
 configurations.all {
