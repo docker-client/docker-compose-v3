@@ -66,8 +66,7 @@ dependencies {
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-  testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.17")
-  testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.17")
+  testImplementation("io.kotest:kotest-runner-junit5:4.6.4")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -79,7 +78,8 @@ val dependencyVersions = listOf(
 )
 
 val dependencyGroupVersions = mapOf(
-  "org.junit.jupiter" to "5.8.1"
+  "org.junit.jupiter" to "5.8.1",
+  "org.junit.platform" to "1.8.1"
 )
 
 configurations.all {
@@ -105,10 +105,8 @@ tasks {
     kotlinOptions.jvmTarget = "1.8"
   }
 
-  withType(Test::class.java) {
-    useJUnitPlatform {
-      includeEngines("spek2")
-    }
+  withType<Test> {
+    useJUnitPlatform()
   }
 }
 
