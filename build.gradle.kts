@@ -58,7 +58,7 @@ dependencies {
   testRuntimeOnly("ch.qos.logback:logback-classic:1.2.10")
 
   implementation("org.yaml:snakeyaml:1.30")
-  implementation("com.squareup.moshi:moshi:1.12.0")
+  implementation("com.squareup.moshi:moshi:1.13.0")
   implementation("com.squareup.moshi:moshi-kotlin:1.12.0")
   testImplementation("com.beust:klaxon:5.5")
 
