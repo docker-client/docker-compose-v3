@@ -21,7 +21,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api") {
       version {
         strictly("[1.7,1.8)")
-        prefer("1.7.32")
+        prefer("1.7.36")
       }
     }
     listOf(
@@ -33,8 +33,8 @@ dependencies {
     ).onEach {
       implementation(it) {
         version {
-          strictly("[1.3,1.6)")
-          prefer("1.5.31")
+          strictly("[1.3,1.7)")
+          prefer("1.6.10")
         }
       }
     }
@@ -50,11 +50,11 @@ dependencies {
       }
     }
   }
-  implementation("org.jetbrains.kotlin:kotlin-stdlib")
-  implementation("org.jetbrains.kotlin:kotlin-reflect")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
 
   implementation("io.github.microutils:kotlin-logging:2.1.21")
-  implementation("org.slf4j:slf4j-api")
+  implementation("org.slf4j:slf4j-api:1.7.36")
   testRuntimeOnly("ch.qos.logback:logback-classic:1.2.10")
 
   implementation("org.yaml:snakeyaml:1.30")
@@ -65,9 +65,9 @@ dependencies {
   implementation("com.google.re2j:re2j:1.6")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.6.10")
   testImplementation("io.kotest:kotest-runner-junit5:5.1.0")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.8.1")
 }
 
 val dependencyVersions = listOf(
