@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
-  kotlin("jvm") version "1.5.31"
+  kotlin("jvm") version "1.6.10"
   id("maven-publish")
   id("signing")
   id("com.github.ben-manes.versions") version "0.42.0"
