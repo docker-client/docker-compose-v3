@@ -53,7 +53,7 @@ dependencies {
       "com.squareup.moshi:moshi",
       "com.squareup.moshi:moshi-kotlin"
     ).onEach {
-      testRuntimeOnly(it) {
+      implementation(it) {
         version {
           strictly("[1.12.0,2)")
           prefer("1.13.0")
