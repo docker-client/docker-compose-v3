@@ -49,6 +49,17 @@ dependencies {
         }
       }
     }
+    listOf(
+      "com.squareup.moshi:moshi",
+      "com.squareup.moshi:moshi-kotlin"
+    ).onEach {
+      testRuntimeOnly(it) {
+        version {
+          strictly("[1.12.0,2)")
+          prefer("1.13.0")
+        }
+      }
+    }
   }
   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
