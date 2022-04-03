@@ -33,8 +33,8 @@ dependencies {
     ).onEach {
       implementation(it) {
         version {
-          strictly("[1.3,1.7)")
-          prefer("1.6.10")
+          strictly("[1.4,1.7)")
+          prefer("1.6.20")
         }
       }
     }
@@ -82,7 +82,7 @@ dependencies {
 }
 
 val dependencyVersions = listOf(
-  "org.jetbrains.kotlin:kotlin-stdlib:1.6.10",
+  "org.jetbrains.kotlin:kotlin-stdlib:1.6.20",
   "org.jetbrains.kotlin:kotlin-stdlib-common:1.6.20",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.0"
