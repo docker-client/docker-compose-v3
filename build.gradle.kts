@@ -39,17 +39,6 @@ dependencies {
       }
     }
     listOf(
-      "org.junit.platform:junit-platform-engine",
-      "org.junit.platform:junit-platform-launcher"
-    ).onEach {
-      testRuntimeOnly(it) {
-        version {
-          strictly("[1.7,2)")
-          prefer("1.8.2")
-        }
-      }
-    }
-    listOf(
       "com.squareup.moshi:moshi",
       "com.squareup.moshi:moshi-kotlin"
     ).onEach {
