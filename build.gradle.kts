@@ -49,6 +49,17 @@ dependencies {
         }
       }
     }
+    listOf(
+      "com.squareup.okio:okio",
+      "com.squareup.okio:okio-jvm"
+    ).forEach {
+      implementation(it) {
+        version {
+          strictly("[3,4)")
+          prefer("3.1.0")
+        }
+      }
+    }
   }
   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
