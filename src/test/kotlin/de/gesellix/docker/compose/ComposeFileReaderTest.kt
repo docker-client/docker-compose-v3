@@ -484,7 +484,8 @@ fun newSampleConfigFull(): ComposeConfig {
       interval = "10s",
       retries = 5f,
       test = Command(parts = arrayListOf("echo \"hello world\"")),
-      timeout = "1s"
+      timeout = "1s",
+      startPeriod = "1s"
     ),
     hostname = "foo",
     image = "redis",
