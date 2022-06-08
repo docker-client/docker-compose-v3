@@ -33,7 +33,7 @@ dependencies {
     ).onEach {
       implementation(it) {
         version {
-          strictly("[1.4,1.7)")
+          strictly("[1.5,1.7)")
           prefer("1.6.21")
         }
       }
@@ -82,8 +82,12 @@ dependencies {
 }
 
 val dependencyVersions = listOf(
+  "org.jetbrains.kotlin:kotlin-reflect:1.7.0",
   "org.jetbrains.kotlin:kotlin-stdlib:1.7.0",
   "org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0",
+  "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.0",
+  "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0",
+  "org.jetbrains.kotlin:kotlin-test:1.7.0",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.2",
   "org.jetbrains.kotlinx:kotlinx-coroutines-debug:1.6.2",
