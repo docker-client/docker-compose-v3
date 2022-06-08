@@ -61,7 +61,7 @@ dependencies {
       }
     }
   }
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.0")
 
   implementation("io.github.microutils:kotlin-logging:2.1.23")
@@ -82,7 +82,7 @@ dependencies {
 }
 
 val dependencyVersions = listOf(
-  "org.jetbrains.kotlin:kotlin-stdlib:1.6.20",
+  "org.jetbrains.kotlin:kotlin-stdlib:1.7.0",
   "org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.2",
