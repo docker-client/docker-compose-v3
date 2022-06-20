@@ -91,7 +91,7 @@ val dependencyVersions = listOf(
   "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3",
   "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3",
   "org.jetbrains.kotlinx:kotlinx-coroutines-debug:1.6.3",
-  "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.2",
+  "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3",
   "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3"
 )
 
