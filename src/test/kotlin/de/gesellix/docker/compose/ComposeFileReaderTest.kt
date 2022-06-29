@@ -218,6 +218,18 @@ class ComposeFileReaderTest : DescribeSpec({
         assertEquals(ServiceVolumeType.TypeBind.typeName, result.services!!.getValue("foo").volumes!!.first().type)
       }
     }
+
+    context("volumes_nocopy/sample.yaml") {
+
+      val composeFile = ComposeFileReaderTest::class.java.getResource("volumes_nocopy/sample.yaml")
+      val workingDir = Paths.get(composeFile.toURI()).parent.toString()
+      val result = ComposeFileReader().load(composeFile.openStream(), workingDir, System.getenv())!!
+
+      it("should set volume type and nocopy") {
+        assertEquals(ServiceVolumeType.TypeVolume.typeName, result.services!!.getValue("foo").volumes!!.first().type)
+        assertTrue(result.services!!.getValue("foo").volumes!!.first().volume!!.nocopy)
+      }
+    }
   }
 
   describe("configs") {

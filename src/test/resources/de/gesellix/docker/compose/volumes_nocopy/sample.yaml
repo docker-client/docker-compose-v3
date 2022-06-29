@@ -1,0 +1,10 @@
+version: "3"
+services:
+  foo:
+    image: busybox
+    volumes:
+      - source: myvol
+        target: /foo
+        type: volume
+        volume:
+          nocopy: true
