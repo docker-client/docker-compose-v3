@@ -33,8 +33,8 @@ dependencies {
     ).onEach {
       implementation(it) {
         version {
-          strictly("[1.5,1.7)")
-          prefer("1.6.21")
+          strictly("[1.5,1.8)")
+          prefer("1.7.10")
         }
       }
     }
@@ -56,7 +56,7 @@ dependencies {
       implementation(it) {
         version {
           strictly("[3,4)")
-          prefer("3.1.0")
+          prefer("3.2.0")
         }
       }
     }
@@ -82,8 +82,10 @@ dependencies {
 }
 
 val dependencyVersions = listOf(
-  "org.jetbrains.kotlin:kotlin-reflect:1.7.0",
-  "org.jetbrains.kotlin:kotlin-stdlib:1.7.0",
+  "net.bytebuddy:byte-buddy:1.12.6",
+  "net.bytebuddy:byte-buddy-agent:1.12.6",
+  "org.jetbrains.kotlin:kotlin-reflect:1.7.10",
+  "org.jetbrains.kotlin:kotlin-stdlib:1.7.10",
   "org.jetbrains.kotlin:kotlin-stdlib-common:1.7.10",
   "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.10",
   "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10",
