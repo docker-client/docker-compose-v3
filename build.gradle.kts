@@ -84,7 +84,7 @@ dependencies {
 val dependencyVersions = listOf(
   "org.jetbrains.kotlin:kotlin-reflect:1.7.0",
   "org.jetbrains.kotlin:kotlin-stdlib:1.7.0",
-  "org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0",
+  "org.jetbrains.kotlin:kotlin-stdlib-common:1.7.10",
   "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.10",
   "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10",
   "org.jetbrains.kotlin:kotlin-test:1.7.0",
