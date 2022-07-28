@@ -219,6 +219,33 @@ class ComposeFileReaderTest : DescribeSpec({
       }
     }
 
+    context("volumes_zeroinpath/sample.yaml") {
+
+      val composeFile = ComposeFileReaderTest::class.java.getResource("volumes_zeroinpath/sample.yaml")
+      val workingDir = Paths.get(composeFile.toURI()).parent.toString()
+      val result = ComposeFileReader().load(composeFile.openStream(), workingDir, System.getenv())!!
+
+      it("should parse source and target correctly") {
+        assertEquals(ServiceVolumeType.TypeBind.typeName, result.services!!.getValue("foo").volumes!!.first().type)
+        assertEquals("/data/shared_apps/app/acc-70/data", result.services!!.getValue("foo").volumes!!.first().source)
+        assertEquals("/data", result.services!!.getValue("foo").volumes!!.first().target)
+      }
+    }
+
+    context("volumes_readonly_shortsyntax/sample.yaml") {
+
+      val composeFile = ComposeFileReaderTest::class.java.getResource("volumes_readonly_shortsyntax/sample.yaml")
+      val workingDir = Paths.get(composeFile.toURI()).parent.toString()
+      val result = ComposeFileReader().load(composeFile.openStream(), workingDir, System.getenv())!!
+
+      it("should parse source and target correctly") {
+        assertEquals(ServiceVolumeType.TypeBind.typeName, result.services!!.getValue("foo").volumes!!.first().type)
+        assertEquals("/data/shared_apps/app/acc/data", result.services!!.getValue("foo").volumes!!.first().source)
+        assertEquals("/data", result.services!!.getValue("foo").volumes!!.first().target)
+        assertTrue(result.services!!.getValue("foo").volumes!!.first().readOnly)
+      }
+    }
+
     context("volumes_nocopy/sample.yaml") {
 
       val composeFile = ComposeFileReaderTest::class.java.getResource("volumes_nocopy/sample.yaml")

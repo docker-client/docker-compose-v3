@@ -48,21 +48,19 @@ class ListToServiceVolumesAdapter {
                             target = value))
                 }
 
-                val endOfSpec = '0'
-                val spec = "$value$endOfSpec"
-
                 val volume = ServiceVolume()
                 var buf = ""
-                for (char in spec) {
+                for (char in value) {
                     buf = if (isWindowsDrive(buf, char)) {
                         "$buf$char"
-                    } else if (char == ':' || char == endOfSpec) {
-                        populateFieldFromBuffer(char, buf, volume)
+                    } else if (char == ':') {
+                        populateFieldFromBuffer(false, buf, volume)
                         ""
                     } else {
                         "$buf$char"
                     }
                 }
+                populateFieldFromBuffer(true, buf, volume)
 
                 populateType(volume)
                 return listOf(volume)
@@ -122,12 +120,12 @@ class ListToServiceVolumesAdapter {
 //        return firstTwoChars.first().isLetter() && firstTwoChars.last() == ':'
     }
 
-    private fun populateFieldFromBuffer(char: Char, buffer: String, volume: ServiceVolume) {
-        if (buffer.isEmpty()) {
+    private fun populateFieldFromBuffer(endOfInput: Boolean, buffer: String, volume: ServiceVolume) {
+        if (!endOfInput && buffer.isEmpty()) {
             throw IllegalStateException("empty section between colons")
         }
 
-        if (volume.source.isEmpty() && char == '0') {
+        if (volume.source.isEmpty() && endOfInput) {
             volume.target = buffer
             return
         } else if (volume.source.isEmpty()) {
@@ -138,7 +136,7 @@ class ListToServiceVolumesAdapter {
             return
         }
 
-        if (char == ':') {
+        if (!endOfInput) {
             throw IllegalStateException("too many colons")
         }
 
