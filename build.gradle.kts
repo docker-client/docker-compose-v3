@@ -94,12 +94,12 @@ val dependencyVersions = listOf(
   "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4",
   "org.jetbrains.kotlinx:kotlinx-coroutines-debug:1.6.4",
   "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.4",
-  "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+  "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4",
 )
 
 val dependencyGroupVersions = mapOf(
-  "org.junit.jupiter" to "5.8.2",
-  "org.junit.platform" to "1.8.2"
+  "org.junit.jupiter" to "5.9.0",
+  "org.junit.platform" to "1.9.0",
 )
 
 configurations.all {
