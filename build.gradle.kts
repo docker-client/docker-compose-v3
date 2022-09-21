@@ -82,7 +82,7 @@ dependencies {
 }
 
 val dependencyVersions = listOf(
-  "net.bytebuddy:byte-buddy:1.12.16",
+  "net.bytebuddy:byte-buddy:1.12.17",
   "net.bytebuddy:byte-buddy-agent:1.12.16",
   "org.jetbrains.kotlin:kotlin-reflect:1.7.10",
   "org.jetbrains.kotlin:kotlin-stdlib:1.7.10",
