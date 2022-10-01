@@ -64,7 +64,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.10")
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
 
-  implementation("io.github.microutils:kotlin-logging:2.1.23")
+  implementation("io.github.microutils:kotlin-logging:3.0.0")
   implementation("org.slf4j:slf4j-api:2.0.3")
   testRuntimeOnly("ch.qos.logback:logback-classic:1.3.1")
 
