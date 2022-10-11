@@ -82,7 +82,7 @@ dependencies {
 }
 
 val dependencyVersions = listOf(
-  "net.bytebuddy:byte-buddy:1.12.17",
+  "net.bytebuddy:byte-buddy:1.12.18",
   "net.bytebuddy:byte-buddy-agent:1.12.18",
 )
 
