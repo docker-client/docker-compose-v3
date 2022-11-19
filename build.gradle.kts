@@ -83,7 +83,7 @@ dependencies {
 
 val dependencyVersions = listOf(
   "net.bytebuddy:byte-buddy:1.12.19",
-  "net.bytebuddy:byte-buddy-agent:1.12.18",
+  "net.bytebuddy:byte-buddy-agent:1.12.19",
 )
 
 val dependencyGroupVersions = mapOf(
