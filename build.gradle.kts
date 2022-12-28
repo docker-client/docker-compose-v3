@@ -21,7 +21,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api") {
       version {
         strictly("[1.7,3)")
-        prefer("2.0.5")
+        prefer("2.0.6")
       }
     }
     listOf(
@@ -66,7 +66,7 @@ dependencies {
 
   implementation("io.github.microutils:kotlin-logging:3.0.4")
   implementation("org.slf4j:slf4j-api:2.0.6")
-  testRuntimeOnly("ch.qos.logback:logback-classic:1.3.3")
+  testRuntimeOnly("ch.qos.logback:logback-classic:1.3.5")
 
   implementation("org.yaml:snakeyaml:1.33")
   implementation("com.squareup.moshi:moshi:1.14.0")
