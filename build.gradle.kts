@@ -66,7 +66,7 @@ dependencies {
 
   implementation("io.github.microutils:kotlin-logging:3.0.5")
   implementation("org.slf4j:slf4j-api:2.0.7")
-  testRuntimeOnly("ch.qos.logback:logback-classic:1.3.6")
+  testRuntimeOnly("ch.qos.logback:logback-classic:1.4.6")
 
   implementation("org.yaml:snakeyaml:2.0")
   implementation("com.squareup.moshi:moshi:1.14.0")
