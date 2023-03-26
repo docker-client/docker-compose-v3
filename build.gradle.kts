@@ -21,7 +21,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api") {
       version {
         strictly("[1.7,3)")
-        prefer("2.0.6")
+        prefer("2.0.7")
       }
     }
     listOf(
