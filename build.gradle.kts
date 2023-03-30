@@ -62,7 +62,7 @@ dependencies {
     }
   }
   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.10")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.10")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20")
 
   implementation("io.github.microutils:kotlin-logging:3.0.5")
   implementation("org.slf4j:slf4j-api:2.0.7")
