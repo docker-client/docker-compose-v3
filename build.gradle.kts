@@ -62,7 +62,7 @@ dependencies {
       }
     }
   }
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.20")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.21")
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20")
 
   implementation("io.github.microutils:kotlin-logging:3.0.5")
