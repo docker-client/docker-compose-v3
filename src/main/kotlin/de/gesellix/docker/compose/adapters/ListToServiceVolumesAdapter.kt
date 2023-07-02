@@ -73,11 +73,11 @@ class ListToServiceVolumesAdapter {
                     when (reader.peek()) {
                         JsonReader.Token.STRING -> {
                             val value = reader.nextString()
-                            writePropery(volume, name, value)
+                            writeProperty(volume, name, value)
                         }
                         JsonReader.Token.NUMBER -> {
                             val value = reader.nextInt()
-                            writePropery(volume, name, value)
+                            writeProperty(volume, name, value)
                         }
                         JsonReader.Token.BEGIN_OBJECT -> {
                             reader.beginObject()
@@ -87,7 +87,7 @@ class ListToServiceVolumesAdapter {
                                 when (reader.peek()) {
                                     JsonReader.Token.BOOLEAN -> {
                                         val value = reader.nextBoolean()
-                                        writePropery(volumeVolume, name, value)
+                                        writeProperty(volumeVolume, name, value)
                                     }
                                     else -> {
                                         // ...
@@ -95,7 +95,7 @@ class ListToServiceVolumesAdapter {
                                 }
                             }
                             reader.endObject()
-                            writePropery(volume, name, volumeVolume)
+                            writeProperty(volume, name, volumeVolume)
                         }
                         else -> {
                             // ...
