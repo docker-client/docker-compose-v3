@@ -25,103 +25,110 @@ private val log = KotlinLogging.logger {}
 
 class ComposeFileReader {
 
-    // UnsupportedProperties not yet supported by this implementation of the compose file
-    private val unsupportedProperties = listOf(
-            "build",
-            "cap_add",
-            "cap_drop",
-            "cgroup_parent",
-            "devices",
-            "dns",
-            "dns_search",
-            "domainname",
-            "external_links",
-            "ipc",
-            "links",
-            "mac_address",
-            "network_mode",
-            "privileged",
-            "read_only",
-            "restart",
-            "security_opt",
-            "shm_size",
-            "sysctls",
-            "tmpfs",
-            "userns_mode")
+  // UnsupportedProperties not yet supported by this implementation of the compose file
+  private val unsupportedProperties = listOf(
+    "build",
+    "cap_add",
+    "cap_drop",
+    "cgroup_parent",
+    "devices",
+    "dns",
+    "dns_search",
+    "domainname",
+    "external_links",
+    "ipc",
+    "links",
+    "mac_address",
+    "network_mode",
+    "privileged",
+    "read_only",
+    "restart",
+    "security_opt",
+    "shm_size",
+    "sysctls",
+    "tmpfs",
+    "userns_mode"
+  )
 
-    // DeprecatedProperties that were removed from the v3 format, but their use should not impact the behaviour of the application.
-    private val deprecatedProperties = hashMapOf<String, String>().let {
-        it["container_name"] = "Setting the container name is not supported."
-        it["expose"] = "Exposing ports is unnecessary - services on the same network can access each other's containers on any port."
-        it
+  // DeprecatedProperties that were removed from the v3 format, but their use should not impact the behaviour of the application.
+  private val deprecatedProperties = hashMapOf<String, String>().let {
+    it["container_name"] = "Setting the container name is not supported."
+    it["expose"] = "Exposing ports is unnecessary - services on the same network can access each other's containers on any port."
+    it
+  }
+
+  // ForbiddenProperties that are not supported in this implementation of the compose file.
+  private val forbiddenProperties = hashMapOf<String, String>().let {
+    it["extends"] = "Support for `extends` is not implemented yet."
+    it["volume_driver"] = "Instead of setting the volume driver on the service, define a volume using the top-level `volumes` option and specify the driver there."
+    it["volumes_from"] = "To share a volume between services, define it using the top-level `volumes` option and reference it from each service that shares it using the service-level `volumes` option."
+    it["cpu_quota"] = "Set resource limits using deploy.resources"
+    it["cpu_shares"] = "Set resource limits using deploy.resources"
+    it["cpuset"] = "Set resource limits using deploy.resources"
+    it["mem_limit"] = "Set resource limits using deploy.resources"
+    it["memswap_limit"] = "Set resource limits using deploy.resources"
+    it
+  }
+
+  private val interpolator = ComposeInterpolator()
+
+  fun loadYaml(composeFile: InputStream): HashMap<String, Map<String, Map<String, Any?>?>> {
+//    val loadSettings = LoadSettings.builder().build()
+//    val composeContent = Load(loadSettings).loadFromInputStream(composeFile) as Map<String, Map<String, Map<String, Any?>?>>
+    val composeContent = Yaml().loadAs(composeFile, Map::class.java) as Map<String, Map<String, Map<String, Any?>?>>
+    log.info("composeContent: $composeContent}")
+
+    return hashMapOf<String, Map<String, Map<String, Any?>?>>().apply {
+      putAll(composeContent)
+    }
+  }
+
+  fun load(
+    composeFile: InputStream,
+    workingDir: String,
+    environment: Map<String, String> = System.getenv()
+  ): ComposeConfig? {
+    val composeContent = loadYaml(composeFile)
+
+    val forbiddenProperties = collectForbiddenServiceProperties(composeContent["services"], forbiddenProperties)
+    if (forbiddenProperties.isNotEmpty()) {
+      log.error("Configuration contains forbidden properties: $forbiddenProperties")
+      throw IllegalStateException("Configuration contains forbidden properties")
     }
 
-    // ForbiddenProperties that are not supported in this implementation of the compose file.
-    private val forbiddenProperties = hashMapOf<String, String>().let {
-        it["extends"] = "Support for `extends` is not implemented yet."
-        it["volume_driver"] = "Instead of setting the volume driver on the service, define a volume using the top-level `volumes` option and specify the driver there."
-        it["volumes_from"] = "To share a volume between services, define it using the top-level `volumes` option and reference it from each service that shares it using the service-level `volumes` option."
-        it["cpu_quota"] = "Set resource limits using deploy.resources"
-        it["cpu_shares"] = "Set resource limits using deploy.resources"
-        it["cpuset"] = "Set resource limits using deploy.resources"
-        it["mem_limit"] = "Set resource limits using deploy.resources"
-        it["memswap_limit"] = "Set resource limits using deploy.resources"
-        it
-    }
+    // overrides interpolated sections, but keeps non-interpolated ones.
+    composeContent.putAll(interpolator.interpolate(composeContent, environment))
 
-    private val interpolator = ComposeInterpolator()
-
-    fun loadYaml(composeFile: InputStream): HashMap<String, Map<String, Map<String, Any?>?>> {
-        val composeContent = Yaml().loadAs(composeFile, Map::class.java) as Map<String, Map<String, Map<String, Any?>?>>
-        log.info("composeContent: $composeContent}")
-
-        return hashMapOf<String, Map<String, Map<String, Any?>?>>().apply {
-            putAll(composeContent)
-        }
-    }
-
-    fun load(composeFile: InputStream, workingDir: String, environment: Map<String, String> = System.getenv()): ComposeConfig? {
-        val composeContent = loadYaml(composeFile)
-
-        val forbiddenProperties = collectForbiddenServiceProperties(composeContent["services"], forbiddenProperties)
-        if (forbiddenProperties.isNotEmpty()) {
-            log.error("Configuration contains forbidden properties: $forbiddenProperties")
-            throw IllegalStateException("Configuration contains forbidden properties")
-        }
-
-        // overrides interpolated sections, but keeps non-interpolated ones.
-        composeContent.putAll(interpolator.interpolate(composeContent, environment))
-
-        val cfg = Moshi.Builder()
-                .add(KotlinJsonAdapterFactory())
-                .add(ListToExposeAdapter())
-                .add(ListToPortConfigsAdapter())
-                .add(ListToServiceSecretsAdapter())
-                .add(ListToServiceVolumesAdapter())
-                .add(ListToServiceConfigsAdapter())
-                .add(MapOrListToEnvironmentAdapter())
-                .add(MapOrListToExtraHosts())
-                .add(MapOrListToLabelAdapter())
-                .add(MapToDriverOptsAdapter())
-                .add(MapToExternalAdapter())
-                .add(StringOrListToEntrypointAdapter())
-                .add(StringOrListToCommandAdapter())
-                .add(StringToServiceNetworksAdapter())
-                .build()
-                .adapter(ComposeConfig::class.java)
-                .fromJsonValue(composeContent)
+    val cfg = Moshi.Builder()
+      .add(KotlinJsonAdapterFactory())
+      .add(ListToExposeAdapter())
+      .add(ListToPortConfigsAdapter())
+      .add(ListToServiceSecretsAdapter())
+      .add(ListToServiceVolumesAdapter())
+      .add(ListToServiceConfigsAdapter())
+      .add(MapOrListToEnvironmentAdapter())
+      .add(MapOrListToExtraHosts())
+      .add(MapOrListToLabelAdapter())
+      .add(MapToDriverOptsAdapter())
+      .add(MapToExternalAdapter())
+      .add(StringOrListToEntrypointAdapter())
+      .add(StringOrListToCommandAdapter())
+      .add(StringToServiceNetworksAdapter())
+      .build()
+      .adapter(ComposeConfig::class.java)
+      .fromJsonValue(composeContent)
 
 //        def valid = new SchemaValidator().validate(composeContent)
 
-        val unsupportedProperties = collectUnsupportedServiceProperties(composeContent["services"], unsupportedProperties)
-        if (unsupportedProperties.isNotEmpty()) {
-            log.warn("Ignoring unsupported options: ${unsupportedProperties.joinToString(", ")}")
-        }
+    val unsupportedProperties = collectUnsupportedServiceProperties(composeContent["services"], unsupportedProperties)
+    if (unsupportedProperties.isNotEmpty()) {
+      log.warn("Ignoring unsupported options: ${unsupportedProperties.joinToString(", ")}")
+    }
 
-        val deprecatedProperties = collectDeprecatedServiceProperties(composeContent["services"], deprecatedProperties)
-        if (deprecatedProperties.isNotEmpty()) {
-            log.warn("Ignoring deprecated options: $deprecatedProperties")
-        }
+    val deprecatedProperties = collectDeprecatedServiceProperties(composeContent["services"], deprecatedProperties)
+    if (deprecatedProperties.isNotEmpty()) {
+      log.warn("Ignoring deprecated options: $deprecatedProperties")
+    }
 
 //        if volume.External.Name == "" {
 //            volume.External.Name = name
@@ -134,48 +141,57 @@ class ComposeFileReader {
 //            }
 //        }
 
-        return cfg
-    }
+    return cfg
+  }
 
-    private fun collectForbiddenServiceProperties(services: Map<String, Map<String, Any?>?>?, forbiddenProperties: Map<String, String>): Map<String, String> {
-        val hits = hashMapOf<String, String>()
-        services?.forEach { service, serviceConfig ->
-            if (serviceConfig != null) {
-                forbiddenProperties.forEach { (property, description) ->
-                    if (serviceConfig.containsKey(property)) {
-                        hits["$service.$property"] = description
-                    }
-                }
-            }
+  private fun collectForbiddenServiceProperties(
+    services: Map<String, Map<String, Any?>?>?,
+    forbiddenProperties: Map<String, String>
+  ): Map<String, String> {
+    val hits = hashMapOf<String, String>()
+    services?.forEach { service, serviceConfig ->
+      if (serviceConfig != null) {
+        forbiddenProperties.forEach { (property, description) ->
+          if (serviceConfig.containsKey(property)) {
+            hits["$service.$property"] = description
+          }
         }
-        return hits
+      }
     }
+    return hits
+  }
 
-    private fun collectUnsupportedServiceProperties(services: Map<String, Map<String, Any?>?>?, unsupportedProperties: List<String>): List<String> {
-        val hits = arrayListOf<String>()
-        services?.forEach { service, serviceConfig ->
-            if (serviceConfig != null) {
-                unsupportedProperties.forEach { property ->
-                    if (serviceConfig.containsKey(property)) {
-                        hits.add("$service.$property")
-                    }
-                }
-            }
+  private fun collectUnsupportedServiceProperties(
+    services: Map<String, Map<String, Any?>?>?,
+    unsupportedProperties: List<String>
+  ): List<String> {
+    val hits = arrayListOf<String>()
+    services?.forEach { service, serviceConfig ->
+      if (serviceConfig != null) {
+        unsupportedProperties.forEach { property ->
+          if (serviceConfig.containsKey(property)) {
+            hits.add("$service.$property")
+          }
         }
-        return hits
+      }
     }
+    return hits
+  }
 
-    private fun collectDeprecatedServiceProperties(services: Map<String, Map<String, Any?>?>?, deprecatedProperties: Map<String, String>): Map<String, String> {
-        val hits = hashMapOf<String, String>()
-        services?.forEach { service, serviceConfig ->
-            if (serviceConfig != null) {
-                deprecatedProperties.forEach { (property, description) ->
-                    if (serviceConfig.containsKey(property)) {
-                        hits["$service.$property"] = description
-                    }
-                }
-            }
+  private fun collectDeprecatedServiceProperties(
+    services: Map<String, Map<String, Any?>?>?,
+    deprecatedProperties: Map<String, String>
+  ): Map<String, String> {
+    val hits = hashMapOf<String, String>()
+    services?.forEach { service, serviceConfig ->
+      if (serviceConfig != null) {
+        deprecatedProperties.forEach { (property, description) ->
+          if (serviceConfig.containsKey(property)) {
+            hits["$service.$property"] = description
+          }
         }
-        return hits
+      }
     }
+    return hits
+  }
 }
