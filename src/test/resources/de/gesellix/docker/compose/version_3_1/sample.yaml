@@ -5,7 +5,9 @@ services:
     secrets:
       - super
       - source: duper
-        mode: 0444
+        mode: 0444 # YAML 1.1
+#        mode: 0o444 # YAML 1.2
+#        mode: 292 # decimal
 secrets:
   super:
     external: true
