@@ -45,11 +45,11 @@ class ListToServiceConfigsAdapter {
                     when (reader.peek()) {
                         JsonReader.Token.STRING -> {
                             val value = reader.nextString()
-                            writePropery(config, name, value)
+                            writeProperty(config, name, value)
                         }
                         JsonReader.Token.NUMBER -> {
                             val value = reader.nextInt()
-                            writePropery(config, name, value)
+                            writeProperty(config, name, value)
                         }
                         else -> {
                             // ...

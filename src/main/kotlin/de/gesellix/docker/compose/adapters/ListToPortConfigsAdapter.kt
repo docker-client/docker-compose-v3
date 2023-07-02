@@ -51,11 +51,11 @@ class ListToPortConfigsAdapter {
                     when (reader.peek()) {
                         JsonReader.Token.STRING -> {
                             val value = reader.nextString()
-                            writePropery(portConfig, name, value)
+                            writeProperty(portConfig, name, value)
                         }
                         JsonReader.Token.NUMBER -> {
                             val value = reader.nextInt()
-                            writePropery(portConfig, name, value)
+                            writeProperty(portConfig, name, value)
                         }
                         else -> {
                             // ...

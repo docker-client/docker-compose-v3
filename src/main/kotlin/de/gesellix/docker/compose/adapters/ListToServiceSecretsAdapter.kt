@@ -45,11 +45,11 @@ class ListToServiceSecretsAdapter {
                     when (reader.peek()) {
                         JsonReader.Token.STRING -> {
                             val value = reader.nextString()
-                            writePropery(secret, name, value)
+                            writeProperty(secret, name, value)
                         }
                         JsonReader.Token.NUMBER -> {
                             val value = reader.nextInt()
-                            writePropery(secret, name, value)
+                            writeProperty(secret, name, value)
                         }
                         else -> {
                             // ...
