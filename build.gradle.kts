@@ -83,8 +83,8 @@ dependencies {
 }
 
 val dependencyVersions = listOf(
-  "net.bytebuddy:byte-buddy:1.14.5",
-  "net.bytebuddy:byte-buddy-agent:1.14.5",
+  "net.bytebuddy:byte-buddy:1.14.6",
+  "net.bytebuddy:byte-buddy-agent:1.14.6",
   "org.jetbrains:annotations:24.0.1",
 )
 
