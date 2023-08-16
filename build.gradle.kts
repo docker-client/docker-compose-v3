@@ -57,7 +57,7 @@ dependencies {
       implementation(it) {
         version {
           strictly("[3,4)")
-          prefer("3.4.0")
+          prefer("3.5.0")
         }
       }
     }
@@ -86,11 +86,12 @@ val dependencyVersions = listOf(
   "net.bytebuddy:byte-buddy:1.14.6",
   "net.bytebuddy:byte-buddy-agent:1.14.6",
   "org.jetbrains:annotations:24.0.1",
+  "org.opentest4j:opentest4j:1.3.0",
 )
 
 val dependencyGroupVersions = mapOf(
-  "org.junit.jupiter" to "5.9.3",
-  "org.junit.platform" to "1.9.3",
+  "org.junit.jupiter" to "5.10.0",
+  "org.junit.platform" to "1.10.0",
 )
 
 configurations.all {
