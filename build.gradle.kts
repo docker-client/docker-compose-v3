@@ -67,7 +67,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 
   implementation("io.github.microutils:kotlin-logging:3.0.5")
-  implementation("org.slf4j:slf4j-api:2.0.9")
+  implementation("org.slf4j:slf4j-api:2.0.11")
   testRuntimeOnly("ch.qos.logback:logback-classic:1.3.14")
 
   implementation("org.yaml:snakeyaml:2.2")
