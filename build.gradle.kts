@@ -32,7 +32,7 @@ dependencies {
       "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
       "org.jetbrains.kotlin:kotlin-stdlib-common",
       "org.jetbrains.kotlin:kotlin-test"
-    ).onEach {
+    ).forEach {
       implementation(it) {
         version {
           strictly("[1.6,1.10)")
@@ -43,7 +43,7 @@ dependencies {
     listOf(
       "com.squareup.moshi:moshi",
       "com.squareup.moshi:moshi-kotlin"
-    ).onEach {
+    ).forEach {
       implementation(it) {
         version {
           strictly("[1.12.0,2)")
