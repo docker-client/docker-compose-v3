@@ -12,5 +12,7 @@ data class Healthcheck(
         var test: Command = Command(),
         var timeout: String? = null,
         @Json(name = "start_period")
-        var startPeriod: String? = null
+        var startPeriod: String? = null,
+        @Json(name = "start_interval")
+        var startInterval: String? = null
 )
