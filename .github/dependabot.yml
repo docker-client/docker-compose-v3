@@ -12,6 +12,10 @@ updates:
     groups:
       # https://github.blog/2023-08-24-a-faster-way-to-manage-version-updates-with-dependabot/
       # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups
+      junit:
+        patterns:
+          - "org.junit.jupiter:*"
+          - "org.junit.platform:*"
       kotlin:
         patterns:
           - "org.jetbrains.kotlin:*"
