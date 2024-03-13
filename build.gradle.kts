@@ -91,8 +91,8 @@ val dependencyVersions = listOf(
 )
 
 val dependencyGroupVersions = mapOf(
-  "org.junit.jupiter" to "5.10.1",
-  "org.junit.platform" to "1.10.1",
+  "org.junit.jupiter" to "5.10.2",
+  "org.junit.platform" to "1.10.2",
 )
 
 configurations.all {
