@@ -63,8 +63,8 @@ dependencies {
       }
     }
   }
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.23")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.23")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.24")
 
   implementation("io.github.microutils:kotlin-logging:3.0.5")
   implementation("org.slf4j:slf4j-api:2.0.12")
@@ -78,7 +78,7 @@ dependencies {
   implementation("com.google.re2j:re2j:1.7")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.9.23")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.9.24")
   testImplementation("io.kotest:kotest-runner-junit5:5.8.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
 }
