@@ -79,7 +79,7 @@ dependencies {
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.9.23")
-  testImplementation("io.kotest:kotest-runner-junit5:5.8.1")
+  testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
 }
 
