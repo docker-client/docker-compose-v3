@@ -38,7 +38,7 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java }}
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
       - name: clean build
         run: ./gradlew clean build --info --stacktrace
       - name: Upload Test Results
