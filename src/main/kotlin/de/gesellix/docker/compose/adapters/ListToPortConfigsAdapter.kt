@@ -116,11 +116,11 @@ class ListToPortConfigsAdapter {
             if (startPort == endPort && startHostPort != endHostPort) {
                 hostPort = "$hostPort-$endHostPort"
             }
-            val port = newPort(proto.toLowerCase(), containerPort)
+            val port = newPort(proto.lowercase(), containerPort)
             portMappings.add(hashMapOf<String, Any>().let { mapping ->
                 mapping["port"] = port
                 mapping["binding"] = hashMapOf<String, Any>().let { binding ->
-                    binding["proto"] = proto.toLowerCase()
+                    binding["proto"] = proto.lowercase()
                     binding["hostIP"] = rawIP
                     binding["hostPort"] = hostPort
                     binding
@@ -193,7 +193,7 @@ class ListToPortConfigsAdapter {
     }
 
     private fun validateProto(proto: String) {
-        if (!listOf("tcp", "udp").contains(proto.toLowerCase())) {
+        if (!listOf("tcp", "udp").contains(proto.lowercase())) {
             throw  IllegalStateException("Invalid proto '$proto'")
         }
     }
