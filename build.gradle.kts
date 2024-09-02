@@ -71,7 +71,7 @@ dependencies {
   implementation("org.slf4j:slf4j-api:2.0.16")
   testRuntimeOnly("ch.qos.logback:logback-classic:1.3.14")
 
-  implementation("org.yaml:snakeyaml:2.2")
+  implementation("org.yaml:snakeyaml:2.3")
   implementation("com.squareup.moshi:moshi:1.15.1")
   implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
   testImplementation("com.beust:klaxon:5.5")
