@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
-  kotlin("jvm") version "2.0.20"
+  kotlin("jvm") version "2.0.21"
   id("maven-publish")
   id("signing")
   id("com.github.ben-manes.versions") version "0.51.0"
@@ -37,7 +37,7 @@ dependencies {
       implementation(it) {
         version {
           strictly("[1.6,3)")
-          prefer("2.0.20")
+          prefer("2.0.21")
         }
       }
     }
@@ -64,8 +64,8 @@ dependencies {
       }
     }
   }
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.20")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:2.0.20")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.21")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:2.0.21")
 
   implementation("io.github.microutils:kotlin-logging:3.0.5")
   implementation("org.slf4j:slf4j-api:2.0.16")
@@ -79,7 +79,7 @@ dependencies {
   implementation("com.google.re2j:re2j:1.7")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.0.20")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.0.21")
   testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.3")
 }
