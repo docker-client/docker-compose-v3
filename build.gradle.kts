@@ -86,7 +86,7 @@ dependencies {
 
 val dependencyVersions = listOf(
   "net.bytebuddy:byte-buddy:1.15.10",
-  "net.bytebuddy:byte-buddy-agent:1.15.10",
+  "net.bytebuddy:byte-buddy-agent:1.15.11",
   "org.jetbrains:annotations:26.0.1",
   "org.opentest4j:opentest4j:1.3.0",
 )
