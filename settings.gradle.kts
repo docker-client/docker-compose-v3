@@ -1,6 +1,6 @@
 rootProject.name = "docker-compose-v3"
 
-// https://docs.gradle.org/8.0.1/userguide/toolchains.html#sub:download_repositories
+// https://docs.gradle.org/current/userguide/toolchains.html#sub:download_repositories
 plugins {
-  id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
+  id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
 }
