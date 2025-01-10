@@ -76,7 +76,7 @@ dependencies {
   implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
   testImplementation("com.beust:klaxon:5.5")
 
-  implementation("com.google.re2j:re2j:1.7")
+  implementation("com.google.re2j:re2j:1.8")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.1.0")
