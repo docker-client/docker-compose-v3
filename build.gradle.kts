@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
-  kotlin("jvm") version "2.1.0"
+  alias(libs.plugins.kotlinJvm)
   id("maven-publish")
   id("signing")
   id("com.github.ben-manes.versions") version "0.51.0"
@@ -19,67 +19,53 @@ repositories {
 
 dependencies {
   constraints {
-    implementation("org.slf4j:slf4j-api") {
+    implementation(libs.slf4j) {
       version {
-        strictly("[1.7,3)")
-        prefer("2.0.16")
+        strictly(libs.versions.slf4jVersionrange.get())
+        prefer(libs.versions.slf4j.get())
       }
     }
-    listOf(
-      "org.jetbrains.kotlin:kotlin-reflect",
-      "org.jetbrains.kotlin:kotlin-scripting-jvm",
-      "org.jetbrains.kotlin:kotlin-stdlib",
-      "org.jetbrains.kotlin:kotlin-stdlib-jdk7",
-      "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
-      "org.jetbrains.kotlin:kotlin-stdlib-common",
-      "org.jetbrains.kotlin:kotlin-test"
-    ).forEach {
+    listOf(libs.bundles.kotlin).forEach {
       implementation(it) {
         version {
-          strictly("[1.6,3)")
-          prefer("2.1.0")
+          strictly(libs.versions.kotlinVersionrange.get())
+          prefer(libs.versions.kotlin.get())
         }
       }
     }
-    listOf(
-      "com.squareup.moshi:moshi",
-      "com.squareup.moshi:moshi-kotlin"
-    ).forEach {
+    listOf(libs.bundles.moshi).forEach {
       implementation(it) {
         version {
-          strictly("[1.12.0,2)")
-          prefer("1.15.2")
+          strictly(libs.versions.moshiVersionrange.get())
+          prefer(libs.versions.moshi.get())
         }
       }
     }
-    listOf(
-      "com.squareup.okio:okio",
-      "com.squareup.okio:okio-jvm"
-    ).forEach {
+    listOf(libs.bundles.okio).forEach {
       implementation(it) {
         version {
-          strictly("[3,4)")
-          prefer("3.9.1")
+          strictly(libs.versions.okioVersionrange.get())
+          prefer(libs.versions.okio.get())
         }
       }
     }
   }
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.0")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:2.1.0")
+  implementation(libs.kotlinStdlib)
+  implementation(libs.kotlinReflect)
 
   implementation("io.github.microutils:kotlin-logging:3.0.5")
-  implementation("org.slf4j:slf4j-api:2.0.16")
-  testRuntimeOnly("ch.qos.logback:logback-classic:1.3.14")
+  implementation(libs.slf4j)
+  testRuntimeOnly("ch.qos.logback:logback-classic:${libs.versions.logback.get()}")
 
   implementation("org.yaml:snakeyaml:2.3")
-  implementation("com.squareup.moshi:moshi:1.15.2")
-  implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
+  implementation(libs.moshi)
+  implementation(libs.moshiKotlin)
   testImplementation("com.beust:klaxon:5.5")
 
   implementation("com.google.re2j:re2j:1.8")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.1.0")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:${libs.versions.kotlin.get()}")
   testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
 }
@@ -92,8 +78,8 @@ val dependencyVersions = listOf(
 )
 
 val dependencyGroupVersions = mapOf(
-  "org.junit.jupiter" to "5.11.0",
-  "org.junit.platform" to "1.11.0",
+  "org.junit.jupiter" to libs.versions.junitJupiter.get(),
+  "org.junit.platform" to libs.versions.junitPlatform.get(),
 )
 
 configurations.all {
