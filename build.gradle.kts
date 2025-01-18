@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
-  kotlin("jvm") version "2.1.0"
+  alias(libs.plugins.kotlinJvm)
   id("maven-publish")
   id("signing")
   id("com.github.ben-manes.versions") version "0.51.0"
@@ -65,7 +65,7 @@ dependencies {
   implementation("com.google.re2j:re2j:1.8")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.1.0")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:${libs.versions.kotlin.get()}")
   testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
 }

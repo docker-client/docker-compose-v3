@@ -32,3 +32,6 @@ slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 kotlin = ["kotlin", "kotlinCommon", "kotlinJdk7", "kotlinJdk8", "kotlinReflect", "kotlinScriptingJvm", "kotlinStdlib", "kotlinTest"]
 moshi = ["moshi", "moshiKotlin"]
 okio = ["okio", "okioJvm"]
+
+[plugins]
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
