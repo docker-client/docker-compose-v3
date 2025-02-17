@@ -57,7 +57,7 @@ dependencies {
   implementation(libs.slf4j)
   testRuntimeOnly("ch.qos.logback:logback-classic:${libs.versions.logback.get()}")
 
-  implementation("org.yaml:snakeyaml:2.3")
+  implementation("org.yaml:snakeyaml:2.4")
   implementation(libs.moshi)
   implementation(libs.moshiKotlin)
   testImplementation("com.beust:klaxon:5.5")
