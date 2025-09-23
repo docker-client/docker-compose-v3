@@ -19,6 +19,7 @@ updates:
       kotlin:
         patterns:
           - "jvm"
+          - "kotlin"
           - "org.jetbrains.kotlin:*"
       moshi:
         patterns:
