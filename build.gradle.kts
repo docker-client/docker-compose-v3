@@ -7,7 +7,7 @@ plugins {
   alias(libs.plugins.kotlinJvm)
   id("maven-publish")
   id("signing")
-  id("com.github.ben-manes.versions") version "0.52.0"
+  id("com.github.ben-manes.versions") version "0.53.0"
   id("org.sonatype.gradle.plugins.scan") version "3.1.4"
   id("io.freefair.maven-central.validate-poms") version "8.14.2"
   id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
