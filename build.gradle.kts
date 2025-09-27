@@ -60,7 +60,7 @@ dependencies {
   implementation("org.yaml:snakeyaml:2.5")
   implementation(libs.moshi)
   implementation(libs.moshiKotlin)
-  testImplementation("com.beust:klaxon:5.5")
+  testImplementation("com.beust:klaxon:5.6")
 
   implementation("com.google.re2j:re2j:1.8")
 //    implementation("com.github.fge:json-schema-validator:2.2.6")
