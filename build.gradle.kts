@@ -78,6 +78,7 @@ val dependencyVersions = listOf(
 )
 
 val dependencyGroupVersions = mapOf(
+  "org.jetbrains.kotlin" to libs.versions.kotlin.get(),
   "org.junit.jupiter" to libs.versions.junitJupiter.get(),
   "org.junit.platform" to libs.versions.junitPlatform.get(),
 )
