@@ -5,3 +5,6 @@ networks:
     attachable: true
   mynet2:
     driver: bridge
+  mynet3:
+    name: my-custom-network
+    driver: bridge
