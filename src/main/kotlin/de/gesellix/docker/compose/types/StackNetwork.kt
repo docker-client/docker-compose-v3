@@ -17,5 +17,6 @@ data class StackNetwork(
         var internal: Boolean? = null,
         var attachable: Boolean? = false,
         @LabelsType
-        var labels: Labels? = null
+        var labels: Labels? = null,
+        var name: String? = null
 )

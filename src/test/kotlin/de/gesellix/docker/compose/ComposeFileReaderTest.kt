@@ -134,12 +134,14 @@ class ComposeFileReaderTest : DescribeSpec({
       val sampleConfig = hashMapOf<String, StackNetwork>().apply {
         put("mynet1", StackNetwork(driver = "overlay", attachable = true))
         put("mynet2", StackNetwork(driver = "bridge", attachable = false))
+        put("mynet3", StackNetwork(driver = "bridge", attachable = false, name = "my-custom-network"))
       }
       val result = ComposeFileReader().load(composeFile.openStream(), Paths.get(composeFile.toURI()).parent.toString(), System.getenv())!!
 
       it("should load a config with attachable networks") {
         assertEquals(sampleConfig["mynet1"], result.networks!!["mynet1"])
         assertEquals(sampleConfig["mynet2"], result.networks!!["mynet2"])
+        assertEquals(sampleConfig["mynet3"], result.networks!!["mynet3"])
       }
     }
   }
