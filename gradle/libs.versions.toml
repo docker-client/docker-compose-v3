@@ -1,6 +1,6 @@
 [versions]
-junitJupiter = "5.13.4"
-junitPlatform = "1.13.4"
+junitJupiter = "6.1.0"
+junitPlatform = "6.1.0"
 kotlin = "2.4.0"
 kotlinVersionrange = "[1.6,3)"
 logback = "1.5.34"
