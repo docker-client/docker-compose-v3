@@ -8,7 +8,7 @@ plugins {
   id("maven-publish")
   id("signing")
   id("io.github.ben-manes.versions") version "0.64.0"
-  id("org.sonatype.gradle.plugins.scan") version "4.1.0-02"
+  id("org.sonatype.gradle.plugins.scan") version "4.1.1-01"
   id("io.freefair.maven-central.validate-poms") version "9.7.0"
   id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
